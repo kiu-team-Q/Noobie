@@ -50,9 +50,9 @@ export function useAuth() {
   const fetchUserRole = async (userId: string) => {
     try {
       const { data, error } = await supabase
-        .from('user_roles')
+        .from('users')
         .select('role')
-        .eq('user_id', userId)
+        .eq('id', userId)
         .single();
 
       if (error) throw error;
@@ -62,53 +62,6 @@ export function useAuth() {
       setRole(null);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const signUp = async (email: string, password: string, fullName: string, selectedRole: 'admin' | 'company' | 'intern') => {
-    try {
-      const redirectUrl = `${window.location.origin}/`;
-      
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          emailRedirectTo: redirectUrl,
-          data: {
-            full_name: fullName
-          }
-        }
-      });
-
-      if (error) throw error;
-
-      if (data.user) {
-        // Assign role after signup
-        const { error: roleError } = await supabase
-          .from('user_roles')
-          .insert({
-            user_id: data.user.id,
-            role: selectedRole
-          });
-
-        if (roleError) throw roleError;
-
-        toast({
-          title: "Account created",
-          description: "Welcome to Noobie!",
-        });
-
-        return { data, error: null };
-      }
-
-      return { data, error: null };
-    } catch (error: any) {
-      toast({
-        variant: "destructive",
-        title: "Sign up failed",
-        description: error.message,
-      });
-      return { data: null, error };
     }
   };
 
@@ -178,7 +131,6 @@ export function useAuth() {
     session,
     role,
     loading,
-    signUp,
     signIn,
     signOut,
     redirectToDashboard,

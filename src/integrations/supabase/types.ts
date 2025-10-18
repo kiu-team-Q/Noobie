@@ -14,96 +14,6 @@ export type Database = {
   }
   public: {
     Tables: {
-      companies: {
-        Row: {
-          created_at: string | null
-          email: string
-          id: string
-          invite_link: string
-          name: string
-          otp: string
-          password_hash: string
-          status: string | null
-          updated_at: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          email: string
-          id?: string
-          invite_link: string
-          name: string
-          otp: string
-          password_hash: string
-          status?: string | null
-          updated_at?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          email?: string
-          id?: string
-          invite_link?: string
-          name?: string
-          otp?: string
-          password_hash?: string
-          status?: string | null
-          updated_at?: string | null
-        }
-        Relationships: []
-      }
-      interns: {
-        Row: {
-          company_id: string
-          created_at: string | null
-          email: string
-          id: string
-          invite_link: string
-          otp: string
-          password_hash: string
-          role_id: string | null
-          status: string | null
-          updated_at: string | null
-        }
-        Insert: {
-          company_id: string
-          created_at?: string | null
-          email: string
-          id?: string
-          invite_link: string
-          otp: string
-          password_hash: string
-          role_id?: string | null
-          status?: string | null
-          updated_at?: string | null
-        }
-        Update: {
-          company_id?: string
-          created_at?: string | null
-          email?: string
-          id?: string
-          invite_link?: string
-          otp?: string
-          password_hash?: string
-          role_id?: string | null
-          status?: string | null
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "interns_company_id_fkey"
-            columns: ["company_id"]
-            isOneToOne: false
-            referencedRelation: "companies"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "interns_role_id_fkey"
-            columns: ["role_id"]
-            isOneToOne: false
-            referencedRelation: "roles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       profiles: {
         Row: {
           created_at: string | null
@@ -128,107 +38,39 @@ export type Database = {
         }
         Relationships: []
       }
-      roles: {
+      users: {
         Row: {
-          company_id: string
+          company_id: string | null
           created_at: string | null
-          description: string | null
+          email: string
+          first_name: string
           id: string
-          role_name: string
-        }
-        Insert: {
-          company_id: string
-          created_at?: string | null
-          description?: string | null
-          id?: string
-          role_name: string
-        }
-        Update: {
-          company_id?: string
-          created_at?: string | null
-          description?: string | null
-          id?: string
-          role_name?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "roles_company_id_fkey"
-            columns: ["company_id"]
-            isOneToOne: false
-            referencedRelation: "companies"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      rules_files: {
-        Row: {
-          company_id: string
-          created_at: string | null
-          file_content: Json | null
-          file_name: string
-          file_type: string
-          id: string
-          role_id: string
-          rules_count: number | null
+          last_name: string
+          position: string | null
+          role: string
           updated_at: string | null
         }
         Insert: {
-          company_id: string
+          company_id?: string | null
           created_at?: string | null
-          file_content?: Json | null
-          file_name: string
-          file_type: string
-          id?: string
-          role_id: string
-          rules_count?: number | null
-          updated_at?: string | null
-        }
-        Update: {
-          company_id?: string
-          created_at?: string | null
-          file_content?: Json | null
-          file_name?: string
-          file_type?: string
-          id?: string
-          role_id?: string
-          rules_count?: number | null
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "rules_files_company_id_fkey"
-            columns: ["company_id"]
-            isOneToOne: false
-            referencedRelation: "companies"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "rules_files_role_id_fkey"
-            columns: ["role_id"]
-            isOneToOne: false
-            referencedRelation: "roles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      user_roles: {
-        Row: {
-          created_at: string | null
+          email: string
+          first_name: string
           id: string
-          role: Database["public"]["Enums"]["app_role"]
-          user_id: string
-        }
-        Insert: {
-          created_at?: string | null
-          id?: string
-          role: Database["public"]["Enums"]["app_role"]
-          user_id: string
+          last_name: string
+          position?: string | null
+          role: string
+          updated_at?: string | null
         }
         Update: {
+          company_id?: string | null
           created_at?: string | null
+          email?: string
+          first_name?: string
           id?: string
-          role?: Database["public"]["Enums"]["app_role"]
-          user_id?: string
+          last_name?: string
+          position?: string | null
+          role?: string
+          updated_at?: string | null
         }
         Relationships: []
       }
@@ -239,18 +81,15 @@ export type Database = {
     Functions: {
       get_user_role: {
         Args: { _user_id: string }
-        Returns: Database["public"]["Enums"]["app_role"]
+        Returns: string
       }
-      has_role: {
-        Args: {
-          _role: Database["public"]["Enums"]["app_role"]
-          _user_id: string
-        }
+      is_admin: {
+        Args: { _user_id: string }
         Returns: boolean
       }
     }
     Enums: {
-      app_role: "admin" | "company" | "intern"
+      [_ in never]: never
     }
     CompositeTypes: {
       [_ in never]: never
@@ -377,8 +216,6 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {
-      app_role: ["admin", "company", "intern"],
-    },
+    Enums: {},
   },
 } as const
