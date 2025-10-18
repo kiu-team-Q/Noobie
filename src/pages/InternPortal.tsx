@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Code2, ArrowLeft, Play, Lightbulb } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Code2, ArrowLeft, Play, Lightbulb, LogOut, User } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 
 interface Violation {
@@ -16,6 +16,10 @@ interface Violation {
 
 const InternPortal = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
+  const [internEmail, setInternEmail] = useState("");
+  const [internRole, setInternRole] = useState("");
+  const [companyName, setCompanyName] = useState("");
   const [code, setCode] = useState("");
   const [analysis, setAnalysis] = useState<{
     violations: Violation[];
@@ -23,6 +27,21 @@ const InternPortal = () => {
     explanation: string;
   } | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+
+  useEffect(() => {
+    const email = localStorage.getItem("intern_email");
+    const role = localStorage.getItem("intern_role");
+    const company = localStorage.getItem("company_name");
+    
+    if (!email) {
+      navigate("/intern/login");
+      return;
+    }
+    
+    setInternEmail(email);
+    setInternRole(role || "No role assigned");
+    setCompanyName(company || "");
+  }, [navigate]);
 
   const handleAnalyze = () => {
     setIsAnalyzing(true);
@@ -70,6 +89,14 @@ const InternPortal = () => {
     }, 1500);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("intern_id");
+    localStorage.removeItem("intern_email");
+    localStorage.removeItem("intern_role");
+    localStorage.removeItem("company_name");
+    navigate("/intern/login");
+  };
+
   const getViolationColor = (type: string) => {
     switch (type) {
       case "style":
@@ -100,12 +127,31 @@ const InternPortal = () => {
     <div className="min-h-screen bg-background">
       <div className="border-b border-border">
         <div className="container mx-auto px-6 py-6">
-          <Link to="/" className="mb-2 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
-            <ArrowLeft className="h-4 w-4" />
-            Back to Home
-          </Link>
-          <h1 className="text-3xl font-bold text-foreground">Intern Portal</h1>
-          <p className="text-muted-foreground">Get real-time AI feedback on your code</p>
+          <div className="flex items-center justify-between">
+            <div>
+              <Link to="/" className="mb-2 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
+                <ArrowLeft className="h-4 w-4" />
+                Back to Home
+              </Link>
+              <h1 className="text-3xl font-bold text-foreground">Intern Portal</h1>
+              <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                <div className="flex items-center gap-2">
+                  <User className="h-4 w-4" />
+                  {internEmail}
+                </div>
+                <div className="flex items-center gap-2">
+                  <Badge variant="outline">{internRole}</Badge>
+                </div>
+                {companyName && (
+                  <div>at {companyName}</div>
+                )}
+              </div>
+            </div>
+            <Button onClick={handleLogout} variant="outline" className="gap-2">
+              <LogOut className="h-4 w-4" />
+              Logout
+            </Button>
+          </div>
         </div>
       </div>
 

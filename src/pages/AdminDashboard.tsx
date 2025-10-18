@@ -1,38 +1,59 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { Building2, Mail, Key, Plus, ArrowLeft } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Building2, Mail, Key, Plus, ArrowLeft, LogOut } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Company {
   id: string;
   name: string;
   email: string;
   status: "pending" | "active" | "suspended";
-  inviteLink: string;
+  invite_link: string;
   otp: string;
 }
 
 const AdminDashboard = () => {
   const { toast } = useToast();
-  const [companies, setCompanies] = useState<Company[]>([
-    {
-      id: "1",
-      name: "DevCorp Technologies",
-      email: "admin@devcorp.com",
-      status: "active",
-      inviteLink: "https://devbuddy.app/company/invite/abc123",
-      otp: "CORP2024",
-    },
-  ]);
-  
+  const navigate = useNavigate();
+  const [companies, setCompanies] = useState<Company[]>([]);
   const [companyName, setCompanyName] = useState("");
   const [companyEmail, setCompanyEmail] = useState("");
   const [showInviteModal, setShowInviteModal] = useState(false);
+  const [newCompany, setNewCompany] = useState<Company | null>(null);
+
+  useEffect(() => {
+    // Check authentication
+    const isLoggedIn = localStorage.getItem("admin_logged_in");
+    if (!isLoggedIn) {
+      navigate("/admin/login");
+      return;
+    }
+
+    loadCompanies();
+  }, [navigate]);
+
+  const loadCompanies = async () => {
+    const { data, error } = await supabase
+      .from("companies")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      toast({
+        title: "Error",
+        description: "Failed to load companies",
+        variant: "destructive",
+      });
+    } else if (data) {
+      setCompanies(data as Company[]);
+    }
+  };
 
   const generateOTP = () => {
     return Math.random().toString(36).substring(2, 10).toUpperCase();
@@ -40,10 +61,10 @@ const AdminDashboard = () => {
 
   const generateInviteLink = () => {
     const id = Math.random().toString(36).substring(2, 9);
-    return `https://devbuddy.app/company/invite/${id}`;
+    return `${window.location.origin}/company/login?invite=${id}`;
   };
 
-  const handleInviteCompany = () => {
+  const handleInviteCompany = async () => {
     if (!companyName || !companyEmail) {
       toast({
         title: "Missing Information",
@@ -53,22 +74,47 @@ const AdminDashboard = () => {
       return;
     }
 
-    const newCompany: Company = {
-      id: Date.now().toString(),
-      name: companyName,
-      email: companyEmail,
-      status: "pending",
-      inviteLink: generateInviteLink(),
-      otp: generateOTP(),
-    };
+    const otp = generateOTP();
+    const inviteLink = generateInviteLink();
 
-    setCompanies([...companies, newCompany]);
+    const { data, error } = await supabase
+      .from("companies")
+      .insert({
+        name: companyName,
+        email: companyEmail,
+        password_hash: "$2a$10$placeholder",
+        otp: otp,
+        invite_link: inviteLink,
+        status: "pending",
+      })
+      .select()
+      .single();
+
+    if (error) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setNewCompany(data as Company);
     setShowInviteModal(true);
+    setCompanyName("");
+    setCompanyEmail("");
     
     toast({
       title: "Company Invited",
       description: `Invitation sent to ${companyEmail}`,
     });
+
+    loadCompanies();
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("admin_logged_in");
+    navigate("/admin/login");
   };
 
   const getStatusColor = (status: Company["status"]) => {
@@ -95,6 +141,10 @@ const AdminDashboard = () => {
               <h1 className="text-3xl font-bold text-foreground">Admin Dashboard</h1>
               <p className="text-muted-foreground">Manage companies and invitations</p>
             </div>
+            <Button onClick={handleLogout} variant="outline" className="gap-2">
+              <LogOut className="h-4 w-4" />
+              Logout
+            </Button>
           </div>
         </div>
       </div>
@@ -139,7 +189,7 @@ const AdminDashboard = () => {
         </Card>
 
         {/* Invite Details Modal */}
-        {showInviteModal && companies[companies.length - 1] && (
+        {showInviteModal && newCompany && (
           <Card className="mb-8 border-primary/50 bg-primary/5 p-6">
             <h3 className="mb-4 text-lg font-semibold text-foreground">Invitation Created Successfully!</h3>
             
@@ -148,7 +198,7 @@ const AdminDashboard = () => {
                 <Mail className="h-5 w-5 text-primary" />
                 <div>
                   <p className="text-sm text-muted-foreground">Invite Link</p>
-                  <p className="font-mono text-sm text-foreground">{companies[companies.length - 1].inviteLink}</p>
+                  <p className="font-mono text-sm text-foreground">{newCompany.invite_link}</p>
                 </div>
               </div>
               
@@ -156,7 +206,7 @@ const AdminDashboard = () => {
                 <Key className="h-5 w-5 text-primary" />
                 <div>
                   <p className="text-sm text-muted-foreground">One-Time Password</p>
-                  <p className="font-mono text-lg font-semibold text-foreground">{companies[companies.length - 1].otp}</p>
+                  <p className="font-mono text-lg font-semibold text-foreground">{newCompany.otp}</p>
                 </div>
               </div>
             </div>
@@ -200,7 +250,7 @@ const AdminDashboard = () => {
                 <div className="mt-4 grid gap-2 rounded-lg bg-muted/30 p-4 md:grid-cols-2">
                   <div>
                     <p className="text-xs text-muted-foreground">Invite Link</p>
-                    <p className="font-mono text-sm text-foreground">{company.inviteLink}</p>
+                    <p className="font-mono text-sm text-foreground">{company.invite_link}</p>
                   </div>
                   <div>
                     <p className="text-xs text-muted-foreground">OTP</p>

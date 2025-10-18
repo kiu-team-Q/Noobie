@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -6,9 +6,10 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Upload, FileCode, Shield, GitBranch, Lightbulb, Mail, Plus, ArrowLeft, CheckCircle2 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Upload, FileCode, Shield, GitBranch, Lightbulb, Mail, Plus, ArrowLeft, CheckCircle2, LogOut, Users } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 interface RuleFile {
   name: string;
@@ -19,21 +20,113 @@ interface RuleFile {
 interface Intern {
   id: string;
   email: string;
-  inviteLink: string;
+  invite_link: string;
   otp: string;
   status: "pending" | "active";
+  role_id?: string;
+  roles?: {
+    role_name: string;
+  };
+}
+
+interface Role {
+  id: string;
+  role_name: string;
+  description: string;
 }
 
 const CompanyPortal = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
+  const [companyId, setCompanyId] = useState<string>("");
+  const [companyName, setCompanyName] = useState<string>("");
   const [uploadedRules, setUploadedRules] = useState<RuleFile[]>([]);
   const [interns, setInterns] = useState<Intern[]>([]);
+  const [roles, setRoles] = useState<Role[]>([]);
   const [internEmail, setInternEmail] = useState("");
+  const [selectedRole, setSelectedRole] = useState("");
+  const [newRoleName, setNewRoleName] = useState("");
+  const [newRoleDescription, setNewRoleDescription] = useState("");
   const [testCode, setTestCode] = useState("");
   const [testResults, setTestResults] = useState<any>(null);
 
+  useEffect(() => {
+    const id = localStorage.getItem("company_id");
+    const name = localStorage.getItem("company_name");
+    
+    if (!id || !name) {
+      navigate("/company/login");
+      return;
+    }
+    
+    setCompanyId(id);
+    setCompanyName(name);
+    loadRoles(id);
+    loadInterns(id);
+  }, [navigate]);
+
+  const loadRoles = async (compId: string) => {
+    const { data, error } = await supabase
+      .from("roles")
+      .select("*")
+      .eq("company_id", compId)
+      .order("created_at", { ascending: false });
+
+    if (!error && data) {
+      setRoles(data);
+    }
+  };
+
+  const loadInterns = async (compId: string) => {
+    const { data, error } = await supabase
+      .from("interns")
+      .select("*, roles(role_name)")
+      .eq("company_id", compId)
+      .order("created_at", { ascending: false });
+
+    if (!error && data) {
+      setInterns(data as Intern[]);
+    }
+  };
+
+  const handleCreateRole = async () => {
+    if (!newRoleName) {
+      toast({
+        title: "Role Name Required",
+        description: "Please enter a role name",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const { error } = await supabase
+      .from("roles")
+      .insert({
+        company_id: companyId,
+        role_name: newRoleName,
+        description: newRoleDescription,
+      });
+
+    if (error) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    toast({
+      title: "Role Created",
+      description: `Role "${newRoleName}" has been created`,
+    });
+
+    setNewRoleName("");
+    setNewRoleDescription("");
+    loadRoles(companyId);
+  };
+
   const handleRuleUpload = () => {
-    // Simulate ZIP upload and parsing
     const mockRules: RuleFile[] = [
       { name: "style_rules.json", type: "style", rulesCount: 8 },
       { name: "security_rules.json", type: "security", rulesCount: 12 },
@@ -48,7 +141,7 @@ const CompanyPortal = () => {
     });
   };
 
-  const handleInviteIntern = () => {
+  const handleInviteIntern = async () => {
     if (!internEmail) {
       toast({
         title: "Email Required",
@@ -58,25 +151,51 @@ const CompanyPortal = () => {
       return;
     }
 
-    const newIntern: Intern = {
-      id: Date.now().toString(),
-      email: internEmail,
-      inviteLink: `https://devbuddy.app/intern/invite/${Math.random().toString(36).substring(2, 9)}`,
-      otp: Math.random().toString(36).substring(2, 10).toUpperCase(),
-      status: "pending",
-    };
+    if (!selectedRole) {
+      toast({
+        title: "Role Required",
+        description: "Please select a role for the intern",
+        variant: "destructive",
+      });
+      return;
+    }
 
-    setInterns([...interns, newIntern]);
+    const otp = Math.random().toString(36).substring(2, 10).toUpperCase();
+    const inviteLink = `${window.location.origin}/intern/login?invite=${Math.random().toString(36).substring(2, 9)}`;
+
+    const { error } = await supabase
+      .from("interns")
+      .insert({
+        company_id: companyId,
+        role_id: selectedRole,
+        email: internEmail,
+        password_hash: "$2a$10$placeholder",
+        otp: otp,
+        invite_link: inviteLink,
+        status: "pending",
+      });
+
+    if (error) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+      return;
+    }
+
     setInternEmail("");
+    setSelectedRole("");
     
     toast({
       title: "Intern Invited",
-      description: `Invitation sent to ${newIntern.email}`,
+      description: `Invitation sent to ${internEmail}`,
     });
+
+    loadInterns(companyId);
   };
 
   const handleTestCode = () => {
-    // Simulate AI analysis
     const mockResults = {
       violations: [
         {
@@ -106,6 +225,12 @@ const CompanyPortal = () => {
     });
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("company_id");
+    localStorage.removeItem("company_name");
+    navigate("/company/login");
+  };
+
   const getRuleIcon = (type: string) => {
     switch (type) {
       case "style":
@@ -123,22 +248,90 @@ const CompanyPortal = () => {
     <div className="min-h-screen bg-background">
       <div className="border-b border-border">
         <div className="container mx-auto px-6 py-6">
-          <Link to="/" className="mb-2 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
-            <ArrowLeft className="h-4 w-4" />
-            Back to Home
-          </Link>
-          <h1 className="text-3xl font-bold text-foreground">Company Portal</h1>
-          <p className="text-muted-foreground">Manage rules, interns, and test AI feedback</p>
+          <div className="flex items-center justify-between">
+            <div>
+              <Link to="/" className="mb-2 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
+                <ArrowLeft className="h-4 w-4" />
+                Back to Home
+              </Link>
+              <h1 className="text-3xl font-bold text-foreground">Company Portal</h1>
+              <p className="text-muted-foreground">{companyName}</p>
+            </div>
+            <Button onClick={handleLogout} variant="outline" className="gap-2">
+              <LogOut className="h-4 w-4" />
+              Logout
+            </Button>
+          </div>
         </div>
       </div>
 
       <div className="container mx-auto px-6 py-8">
-        <Tabs defaultValue="rules" className="space-y-6">
+        <Tabs defaultValue="roles" className="space-y-6">
           <TabsList className="bg-muted">
-            <TabsTrigger value="rules">Rule Management</TabsTrigger>
+            <TabsTrigger value="roles">Role Management</TabsTrigger>
+            <TabsTrigger value="rules">Rule Files</TabsTrigger>
             <TabsTrigger value="interns">Invite Interns</TabsTrigger>
             <TabsTrigger value="test">Test AI</TabsTrigger>
           </TabsList>
+
+          {/* Roles Tab */}
+          <TabsContent value="roles" className="space-y-6">
+            <Card className="border-border bg-card p-6">
+              <h2 className="mb-4 text-xl font-semibold text-card-foreground">Create New Role</h2>
+              <p className="mb-6 text-sm text-muted-foreground">
+                Define roles like "Backend Developer", "Frontend Developer", etc. before inviting interns
+              </p>
+
+              <div className="grid gap-4 md:grid-cols-2">
+                <div>
+                  <Label htmlFor="roleName">Role Name</Label>
+                  <Input
+                    id="roleName"
+                    placeholder="e.g., Backend Developer"
+                    value={newRoleName}
+                    onChange={(e) => setNewRoleName(e.target.value)}
+                    className="mt-2"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="roleDescription">Description (Optional)</Label>
+                  <Input
+                    id="roleDescription"
+                    placeholder="e.g., Works on server-side logic"
+                    value={newRoleDescription}
+                    onChange={(e) => setNewRoleDescription(e.target.value)}
+                    className="mt-2"
+                  />
+                </div>
+              </div>
+
+              <Button onClick={handleCreateRole} className="mt-4 gap-2 bg-primary hover:bg-primary/90">
+                <Plus className="h-4 w-4" />
+                Create Role
+              </Button>
+            </Card>
+
+            {roles.length > 0 && (
+              <div>
+                <h3 className="mb-4 text-lg font-semibold text-foreground">Created Roles</h3>
+                <div className="grid gap-4 md:grid-cols-2">
+                  {roles.map((role) => (
+                    <Card key={role.id} className="border-border bg-card p-4">
+                      <div className="flex items-center gap-3">
+                        <Users className="h-5 w-5 text-primary" />
+                        <div>
+                          <p className="font-semibold text-card-foreground">{role.role_name}</p>
+                          {role.description && (
+                            <p className="text-sm text-muted-foreground">{role.description}</p>
+                          )}
+                        </div>
+                      </div>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            )}
+          </TabsContent>
 
           {/* Rules Tab */}
           <TabsContent value="rules" className="space-y-6">
@@ -183,19 +376,40 @@ const CompanyPortal = () => {
             <Card className="border-border bg-card p-6">
               <h2 className="mb-4 text-xl font-semibold text-card-foreground">Invite Intern</h2>
               
-              <div className="flex gap-4">
-                <Input
-                  type="email"
-                  placeholder="intern@email.com"
-                  value={internEmail}
-                  onChange={(e) => setInternEmail(e.target.value)}
-                  className="flex-1"
-                />
-                <Button onClick={handleInviteIntern} className="gap-2 bg-primary hover:bg-primary/90">
-                  <Plus className="h-4 w-4" />
-                  Send Invite
-                </Button>
+              <div className="grid gap-4 md:grid-cols-2">
+                <div>
+                  <Label htmlFor="internEmail">Intern Email</Label>
+                  <Input
+                    id="internEmail"
+                    type="email"
+                    placeholder="intern@email.com"
+                    value={internEmail}
+                    onChange={(e) => setInternEmail(e.target.value)}
+                    className="mt-2"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="roleSelect">Assign Role</Label>
+                  <select
+                    id="roleSelect"
+                    value={selectedRole}
+                    onChange={(e) => setSelectedRole(e.target.value)}
+                    className="mt-2 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground"
+                  >
+                    <option value="">Select a role...</option>
+                    {roles.map((role) => (
+                      <option key={role.id} value={role.id}>
+                        {role.role_name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
+
+              <Button onClick={handleInviteIntern} className="mt-4 gap-2 bg-primary hover:bg-primary/90">
+                <Plus className="h-4 w-4" />
+                Send Invite
+              </Button>
             </Card>
 
             {interns.length > 0 && (
@@ -209,7 +423,9 @@ const CompanyPortal = () => {
                           <Mail className="h-5 w-5 text-primary" />
                           <div>
                             <p className="font-semibold text-card-foreground">{intern.email}</p>
-                            <p className="text-sm text-muted-foreground">OTP: {intern.otp}</p>
+                            <p className="text-sm text-muted-foreground">
+                              Role: {intern.roles?.role_name || "Not assigned"} | OTP: {intern.otp}
+                            </p>
                           </div>
                         </div>
                         <Badge className="bg-yellow-500/10 text-yellow-500">
