@@ -8,6 +8,7 @@ import { Building2, Mail, Key, Plus, ArrowLeft, LogOut } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 
 interface Company {
   id: string;
@@ -21,6 +22,7 @@ interface Company {
 const AdminDashboard = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { user, role, loading, signOut } = useAuth();
   const [companies, setCompanies] = useState<Company[]>([]);
   const [companyName, setCompanyName] = useState("");
   const [companyEmail, setCompanyEmail] = useState("");
@@ -28,15 +30,14 @@ const AdminDashboard = () => {
   const [newCompany, setNewCompany] = useState<Company | null>(null);
 
   useEffect(() => {
-    // Check authentication
-    const isLoggedIn = localStorage.getItem("admin_logged_in");
-    if (!isLoggedIn) {
-      navigate("/admin/login");
-      return;
+    if (!loading) {
+      if (!user || role !== 'admin') {
+        navigate("/auth");
+        return;
+      }
+      loadCompanies();
     }
-
-    loadCompanies();
-  }, [navigate]);
+  }, [user, role, loading, navigate]);
 
   const loadCompanies = async () => {
     const { data, error } = await supabase
@@ -113,9 +114,12 @@ const AdminDashboard = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("admin_logged_in");
-    navigate("/admin/login");
+    signOut();
   };
+
+  if (loading) {
+    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+  }
 
   const getStatusColor = (status: Company["status"]) => {
     switch (status) {

@@ -27,15 +27,10 @@ const Home = () => {
             </p>
             
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <Link to="/company/login">
+              <Link to="/auth">
                 <Button size="lg" className="gap-2 bg-primary hover:bg-primary/90">
-                  Company Login
+                  Get Started
                   <ArrowRight className="h-4 w-4" />
-                </Button>
-              </Link>
-              <Link to="/intern/login">
-                <Button size="lg" variant="outline" className="gap-2">
-                  Intern Login
                 </Button>
               </Link>
             </div>
@@ -145,7 +140,7 @@ const Home = () => {
             <p className="mb-8 text-lg text-muted-foreground">
               Start using Noobie today and help your developers become productive faster.
             </p>
-            <Link to="/company/login">
+            <Link to="/auth">
               <Button size="lg" className="gap-2 bg-primary hover:bg-primary/90">
                 Get Started
                 <ArrowRight className="h-4 w-4" />
@@ -153,13 +148,11 @@ const Home = () => {
             </Link>
           </div>
           
-          {/* Admin Access Button */}
+          {/* Admin Access Note */}
           <div className="mt-8 text-center">
-            <Link to="/admin/login">
-              <Button variant="ghost" size="sm" className="text-xs text-muted-foreground hover:text-foreground">
-                Admin Access
-              </Button>
-            </Link>
+            <p className="text-xs text-muted-foreground">
+              Admin access available through the auth page
+            </p>
           </div>
         </div>
       </section>

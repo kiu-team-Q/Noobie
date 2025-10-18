@@ -8,6 +8,7 @@ import { Code2, ArrowLeft, Play, Lightbulb, LogOut, User } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 
 interface Violation {
   type: "style" | "security" | "workflow";
@@ -19,6 +20,7 @@ interface Violation {
 const InternPortal = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { user, role, loading, signOut } = useAuth();
   const [internEmail, setInternEmail] = useState("");
   const [internRole, setInternRole] = useState("");
   const [internRoleId, setInternRoleId] = useState("");
@@ -34,25 +36,34 @@ const InternPortal = () => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
   useEffect(() => {
-    const email = localStorage.getItem("intern_email");
-    const role = localStorage.getItem("intern_role");
-    const roleId = localStorage.getItem("intern_role_id");
-    const company = localStorage.getItem("company_name_intern");
-    
-    if (!email) {
-      navigate("/intern/login");
-      return;
+    if (!loading) {
+      if (!user || role !== 'intern') {
+        navigate("/auth");
+        return;
+      }
+      
+      setInternEmail(user.email || "");
+      // TODO: Fetch intern's role and company info from database
+      loadInternInfo(user.id);
     }
+  }, [user, role, loading, navigate]);
+
+  const loadInternInfo = async (userId: string) => {
+    const { data: internData, error } = await supabase
+      .from('interns')
+      .select('role_id, roles(role_name), company_id')
+      .eq('id', userId)
+      .single();
     
-    setInternEmail(email);
-    setInternRole(role || "No role assigned");
-    setInternRoleId(roleId || "");
-    setCompanyName(company || "");
-    
-    if (roleId) {
-      loadRulesForRole(roleId);
+    if (!error && internData) {
+      setInternRoleId(internData.role_id || "");
+      setInternRole(internData.roles?.role_name || "No role assigned");
+      
+      if (internData.role_id) {
+        loadRulesForRole(internData.role_id);
+      }
     }
-  }, [navigate]);
+  };
 
   const loadRulesForRole = async (roleId: string) => {
     const { data, error } = await supabase
@@ -117,13 +128,12 @@ const InternPortal = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("intern_id");
-    localStorage.removeItem("intern_email");
-    localStorage.removeItem("intern_role");
-    localStorage.removeItem("intern_role_id");
-    localStorage.removeItem("company_name_intern");
-    navigate("/intern/login");
+    signOut();
   };
+
+  if (loading) {
+    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+  }
 
   const getViolationColor = (type: string) => {
     switch (type) {

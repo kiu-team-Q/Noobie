@@ -10,6 +10,7 @@ import { Upload, FileCode, Shield, GitBranch, Lightbulb, Mail, Plus, ArrowLeft, 
 import { Link, useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 
 interface RuleFile {
   id?: string;
@@ -39,6 +40,7 @@ interface Role {
 const CompanyPortal = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { user, role, loading, signOut } = useAuth();
   const [companyId, setCompanyId] = useState<string>("");
   const [companyName, setCompanyName] = useState<string>("");
   const [uploadedRules, setUploadedRules] = useState<RuleFile[]>([]);
@@ -53,19 +55,19 @@ const CompanyPortal = () => {
   const [testResults, setTestResults] = useState<any>(null);
 
   useEffect(() => {
-    const id = localStorage.getItem("company_id");
-    const name = localStorage.getItem("company_name");
-    
-    if (!id || !name) {
-      navigate("/company/login");
-      return;
+    if (!loading) {
+      if (!user || role !== 'company') {
+        navigate("/auth");
+        return;
+      }
+      
+      // Use user ID as company ID
+      setCompanyId(user.id);
+      setCompanyName(user.email || "Company");
+      loadRoles(user.id);
+      loadInterns(user.id);
     }
-    
-    setCompanyId(id);
-    setCompanyName(name);
-    loadRoles(id);
-    loadInterns(id);
-  }, [navigate]);
+  }, [user, role, loading, navigate]);
 
   useEffect(() => {
     if (selectedRoleForRules) {
@@ -290,10 +292,12 @@ const CompanyPortal = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("company_id");
-    localStorage.removeItem("company_name");
-    navigate("/company/login");
+    signOut();
   };
+
+  if (loading) {
+    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+  }
 
   const getRuleIcon = (type: string) => {
     switch (type) {
