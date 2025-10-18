@@ -3,9 +3,11 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import { Label } from "@/components/ui/label";
 import { Code2, ArrowLeft, Play, Lightbulb, LogOut, User } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Violation {
   type: "style" | "security" | "workflow";
@@ -19,7 +21,10 @@ const InternPortal = () => {
   const navigate = useNavigate();
   const [internEmail, setInternEmail] = useState("");
   const [internRole, setInternRole] = useState("");
+  const [internRoleId, setInternRoleId] = useState("");
   const [companyName, setCompanyName] = useState("");
+  const [rules, setRules] = useState<any[]>([]);
+  const [selectedRuleType, setSelectedRuleType] = useState<string>("");
   const [code, setCode] = useState("");
   const [analysis, setAnalysis] = useState<{
     violations: Violation[];
@@ -31,6 +36,7 @@ const InternPortal = () => {
   useEffect(() => {
     const email = localStorage.getItem("intern_email");
     const role = localStorage.getItem("intern_role");
+    const roleId = localStorage.getItem("intern_role_id");
     const company = localStorage.getItem("company_name");
     
     if (!email) {
@@ -40,8 +46,29 @@ const InternPortal = () => {
     
     setInternEmail(email);
     setInternRole(role || "No role assigned");
+    setInternRoleId(roleId || "");
     setCompanyName(company || "");
+    
+    if (roleId) {
+      loadRulesForRole(roleId);
+    }
   }, [navigate]);
+
+  const loadRulesForRole = async (roleId: string) => {
+    const { data, error } = await supabase
+      .from("rules_files")
+      .select("*")
+      .eq("role_id", roleId);
+
+    if (!error && data && data.length > 0) {
+      setRules(data);
+      setSelectedRuleType(data[0].file_type);
+    }
+  };
+
+  const getSelectedRule = () => {
+    return rules.find(r => r.file_type === selectedRuleType);
+  };
 
   const handleAnalyze = () => {
     setIsAnalyzing(true);
@@ -93,6 +120,7 @@ const InternPortal = () => {
     localStorage.removeItem("intern_id");
     localStorage.removeItem("intern_email");
     localStorage.removeItem("intern_role");
+    localStorage.removeItem("intern_role_id");
     localStorage.removeItem("company_name");
     navigate("/intern/login");
   };
@@ -156,6 +184,63 @@ const InternPortal = () => {
       </div>
 
       <div className="container mx-auto px-6 py-8">
+        {/* Rules Section */}
+        {rules.length > 0 && (
+          <Card className="mb-6 border-border bg-card p-6">
+            <h2 className="mb-4 text-xl font-semibold text-card-foreground">
+              Your Role's Coding Rules
+            </h2>
+            <p className="mb-4 text-sm text-muted-foreground">
+              These are the coding standards for your role: {internRole}
+            </p>
+
+            <div className="mb-4">
+              <Label htmlFor="ruleType">Rule Type</Label>
+              <select
+                id="ruleType"
+                value={selectedRuleType}
+                onChange={(e) => setSelectedRuleType(e.target.value)}
+                className="mt-2 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring"
+              >
+                {rules.map((rule) => (
+                  <option key={rule.file_type} value={rule.file_type}>
+                    {rule.file_name} ({rule.rules_count} rules)
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {getSelectedRule() && (
+              <div className="rounded-lg border border-border bg-muted/30 p-4">
+                <div className="mb-2 flex items-center gap-2">
+                  <Badge
+                    className={
+                      selectedRuleType === "style"
+                        ? "bg-violation-style/20 text-violation-style"
+                        : selectedRuleType === "security"
+                        ? "bg-violation-security/20 text-violation-security"
+                        : selectedRuleType === "workflow"
+                        ? "bg-violation-workflow/20 text-violation-workflow"
+                        : "bg-primary/20 text-primary"
+                    }
+                  >
+                    {selectedRuleType}
+                  </Badge>
+                  <span className="text-sm text-muted-foreground">
+                    {getSelectedRule()?.rules_count} rules
+                  </span>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  {selectedRuleType === "style" && "Follow these naming conventions and code formatting standards"}
+                  {selectedRuleType === "security" && "Security best practices to prevent vulnerabilities"}
+                  {selectedRuleType === "workflow" && "Workflow patterns and function call sequences"}
+                  {selectedRuleType === "mentorship" && "Advanced tips and best practices from senior developers"}
+                </p>
+              </div>
+            )}
+          </Card>
+        )}
+
         <div className="grid gap-6 lg:grid-cols-2">
           {/* Code Input */}
           <div className="space-y-4">

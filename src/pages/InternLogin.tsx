@@ -41,6 +41,7 @@ const InternLogin = () => {
         localStorage.setItem("intern_id", data.id);
         localStorage.setItem("intern_email", data.email);
         localStorage.setItem("intern_role", data.roles?.role_name || "");
+        localStorage.setItem("intern_role_id", data.role_id || "");
         localStorage.setItem("company_name", data.companies?.name || "");
         
         toast({
