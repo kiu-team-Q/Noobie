@@ -37,7 +37,7 @@ const InternPortal = () => {
     const email = localStorage.getItem("intern_email");
     const role = localStorage.getItem("intern_role");
     const roleId = localStorage.getItem("intern_role_id");
-    const company = localStorage.getItem("company_name");
+    const company = localStorage.getItem("company_name_intern");
     
     if (!email) {
       navigate("/intern/login");
@@ -121,7 +121,7 @@ const InternPortal = () => {
     localStorage.removeItem("intern_email");
     localStorage.removeItem("intern_role");
     localStorage.removeItem("intern_role_id");
-    localStorage.removeItem("company_name");
+    localStorage.removeItem("company_name_intern");
     navigate("/intern/login");
   };
 
@@ -211,31 +211,107 @@ const InternPortal = () => {
             </div>
 
             {getSelectedRule() && (
-              <div className="rounded-lg border border-border bg-muted/30 p-4">
-                <div className="mb-2 flex items-center gap-2">
-                  <Badge
-                    className={
-                      selectedRuleType === "style"
-                        ? "bg-violation-style/20 text-violation-style"
-                        : selectedRuleType === "security"
-                        ? "bg-violation-security/20 text-violation-security"
-                        : selectedRuleType === "workflow"
-                        ? "bg-violation-workflow/20 text-violation-workflow"
-                        : "bg-primary/20 text-primary"
-                    }
-                  >
-                    {selectedRuleType}
-                  </Badge>
-                  <span className="text-sm text-muted-foreground">
-                    {getSelectedRule()?.rules_count} rules
-                  </span>
+              <div className="space-y-4">
+                <div className="rounded-lg border border-border bg-muted/30 p-4">
+                  <div className="mb-3 flex items-center gap-2">
+                    <Badge
+                      className={
+                        selectedRuleType === "style"
+                          ? "bg-violation-style/20 text-violation-style"
+                          : selectedRuleType === "security"
+                          ? "bg-violation-security/20 text-violation-security"
+                          : selectedRuleType === "workflow"
+                          ? "bg-violation-workflow/20 text-violation-workflow"
+                          : "bg-primary/20 text-primary"
+                      }
+                    >
+                      {selectedRuleType}
+                    </Badge>
+                    <span className="text-sm text-muted-foreground">
+                      {getSelectedRule()?.rules_count} rules
+                    </span>
+                  </div>
+                  <p className="mb-4 text-sm text-muted-foreground">
+                    {selectedRuleType === "style" && "Follow these naming conventions and code formatting standards"}
+                    {selectedRuleType === "security" && "Security best practices to prevent vulnerabilities"}
+                    {selectedRuleType === "workflow" && "Workflow patterns and function call sequences"}
+                    {selectedRuleType === "mentorship" && "Advanced tips and best practices from senior developers"}
+                  </p>
                 </div>
-                <p className="text-sm text-muted-foreground">
-                  {selectedRuleType === "style" && "Follow these naming conventions and code formatting standards"}
-                  {selectedRuleType === "security" && "Security best practices to prevent vulnerabilities"}
-                  {selectedRuleType === "workflow" && "Workflow patterns and function call sequences"}
-                  {selectedRuleType === "mentorship" && "Advanced tips and best practices from senior developers"}
-                </p>
+
+                {/* Example Rules Display */}
+                <div className="space-y-3">
+                  <h4 className="text-sm font-semibold text-foreground">Example Rules:</h4>
+                  
+                  {selectedRuleType === "style" && (
+                    <div className="space-y-2">
+                      <div className="rounded-lg border border-violation-style/30 bg-violation-style/5 p-3">
+                        <p className="mb-2 text-sm font-semibold text-foreground">✓ Use camelCase for functions</p>
+                        <div className="space-y-1">
+                          <code className="block rounded bg-code-bg px-2 py-1 text-xs text-foreground">❌ def MyFunction():</code>
+                          <code className="block rounded bg-code-bg px-2 py-1 text-xs text-foreground">✓ def myFunction():</code>
+                        </div>
+                      </div>
+                      <div className="rounded-lg border border-violation-style/30 bg-violation-style/5 p-3">
+                        <p className="mb-2 text-sm font-semibold text-foreground">✓ Use company_log for logging</p>
+                        <div className="space-y-1">
+                          <code className="block rounded bg-code-bg px-2 py-1 text-xs text-foreground">❌ import logging</code>
+                          <code className="block rounded bg-code-bg px-2 py-1 text-xs text-foreground">✓ import company_log as logging</code>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {selectedRuleType === "security" && (
+                    <div className="space-y-2">
+                      <div className="rounded-lg border border-violation-security/30 bg-violation-security/5 p-3">
+                        <p className="mb-2 text-sm font-semibold text-foreground">⚠️ Never use eval()</p>
+                        <div className="space-y-1">
+                          <code className="block rounded bg-code-bg px-2 py-1 text-xs text-foreground">❌ eval(user_input)</code>
+                          <code className="block rounded bg-code-bg px-2 py-1 text-xs text-foreground">✓ safe_parse(user_input)</code>
+                        </div>
+                      </div>
+                      <div className="rounded-lg border border-violation-security/30 bg-violation-security/5 p-3">
+                        <p className="mb-2 text-sm font-semibold text-foreground">⚠️ No hardcoded credentials</p>
+                        <div className="space-y-1">
+                          <code className="block rounded bg-code-bg px-2 py-1 text-xs text-foreground">❌ DB_PASSWORD='1234'</code>
+                          <code className="block rounded bg-code-bg px-2 py-1 text-xs text-foreground">✓ Use environment variables</code>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {selectedRuleType === "workflow" && (
+                    <div className="space-y-2">
+                      <div className="rounded-lg border border-violation-workflow/30 bg-violation-workflow/5 p-3">
+                        <p className="mb-2 text-sm font-semibold text-foreground">⚡ Call initConfig() before compute()</p>
+                        <div className="space-y-1">
+                          <code className="block rounded bg-code-bg px-2 py-1 text-xs text-foreground">❌ compute()</code>
+                          <code className="block rounded bg-code-bg px-2 py-1 text-xs text-foreground">✓ initConfig(); compute()</code>
+                        </div>
+                      </div>
+                      <div className="rounded-lg border border-violation-workflow/30 bg-violation-workflow/5 p-3">
+                        <p className="mb-2 text-sm font-semibold text-foreground">⚡ Always validate before processing</p>
+                        <div className="space-y-1">
+                          <code className="block rounded bg-code-bg px-2 py-1 text-xs text-foreground">✓ validate(data); process(data)</code>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {selectedRuleType === "mentorship" && (
+                    <div className="space-y-2">
+                      <div className="rounded-lg border border-primary/30 bg-primary/5 p-3">
+                        <p className="mb-2 text-sm font-semibold text-foreground">💡 Write descriptive variable names</p>
+                        <p className="text-xs text-muted-foreground">Clear names make code self-documenting and easier to maintain</p>
+                      </div>
+                      <div className="rounded-lg border border-primary/30 bg-primary/5 p-3">
+                        <p className="mb-2 text-sm font-semibold text-foreground">💡 Keep functions small and focused</p>
+                        <p className="text-xs text-muted-foreground">Each function should do one thing well</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             )}
           </Card>

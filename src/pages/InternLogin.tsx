@@ -42,7 +42,7 @@ const InternLogin = () => {
         localStorage.setItem("intern_email", data.email);
         localStorage.setItem("intern_role", data.roles?.role_name || "");
         localStorage.setItem("intern_role_id", data.role_id || "");
-        localStorage.setItem("company_name", data.companies?.name || "");
+        localStorage.setItem("company_name_intern", data.companies?.name || "");
         
         toast({
           title: "Login Successful",
