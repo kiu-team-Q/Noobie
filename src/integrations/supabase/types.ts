@@ -14,6 +14,74 @@ export type Database = {
   }
   public: {
     Tables: {
+      invitations: {
+        Row: {
+          company_id: string
+          created_at: string | null
+          expires_at: string
+          id: string
+          position_id: string
+          token: string
+          updated_at: string | null
+          used_at: string | null
+        }
+        Insert: {
+          company_id: string
+          created_at?: string | null
+          expires_at: string
+          id?: string
+          position_id: string
+          token: string
+          updated_at?: string | null
+          used_at?: string | null
+        }
+        Update: {
+          company_id?: string
+          created_at?: string | null
+          expires_at?: string
+          id?: string
+          position_id?: string
+          token?: string
+          updated_at?: string | null
+          used_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "invitations_position_id_fkey"
+            columns: ["position_id"]
+            isOneToOne: false
+            referencedRelation: "positions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      positions: {
+        Row: {
+          company_id: string
+          created_at: string | null
+          description: string | null
+          id: string
+          name: string
+          updated_at: string | null
+        }
+        Insert: {
+          company_id: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name: string
+          updated_at?: string | null
+        }
+        Update: {
+          company_id?: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string | null
@@ -67,7 +135,7 @@ export type Database = {
           first_name: string
           id: string
           last_name: string
-          position: string | null
+          position_id: string | null
           updated_at: string | null
         }
         Insert: {
@@ -77,7 +145,7 @@ export type Database = {
           first_name: string
           id: string
           last_name: string
-          position?: string | null
+          position_id?: string | null
           updated_at?: string | null
         }
         Update: {
@@ -87,10 +155,18 @@ export type Database = {
           first_name?: string
           id?: string
           last_name?: string
-          position?: string | null
+          position_id?: string | null
           updated_at?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "users_position_id_fkey"
+            columns: ["position_id"]
+            isOneToOne: false
+            referencedRelation: "positions"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
