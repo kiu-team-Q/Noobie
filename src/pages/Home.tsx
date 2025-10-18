@@ -152,6 +152,15 @@ const Home = () => {
               </Button>
             </Link>
           </div>
+          
+          {/* Admin Access Button */}
+          <div className="mt-8 text-center">
+            <Link to="/admin/login">
+              <Button variant="ghost" size="sm" className="text-xs text-muted-foreground hover:text-foreground">
+                Admin Access
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
     </div>
