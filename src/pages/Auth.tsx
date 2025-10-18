@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -22,7 +22,7 @@ export default function Auth() {
     if (user && role) {
       redirectToDashboard();
     }
-  }, [user, role]);
+  }, [user, role, redirectToDashboard]);
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();

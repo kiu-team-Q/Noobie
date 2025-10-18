@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -157,7 +157,7 @@ export function useAuth() {
     }
   };
 
-  const redirectToDashboard = () => {
+  const redirectToDashboard = useCallback(() => {
     if (!role) return;
     
     switch (role) {
@@ -171,7 +171,7 @@ export function useAuth() {
         navigate('/intern');
         break;
     }
-  };
+  }, [role, navigate]);
 
   return {
     user,
