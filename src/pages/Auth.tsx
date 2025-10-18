@@ -44,7 +44,7 @@ export default function Auth() {
         *,
         positions (
           name,
-          description
+          rules
         )
       `)
       .eq('token', inviteToken)
@@ -148,9 +148,9 @@ export default function Auth() {
             <div className="mt-4 p-4 bg-muted rounded-lg text-left">
               <p className="text-sm font-medium">You've been invited to:</p>
               <p className="text-lg font-semibold text-primary">{inviteData.positions?.name}</p>
-              {inviteData.positions?.description && (
+              {inviteData.positions?.rules && (
                 <p className="text-sm text-muted-foreground mt-1">
-                  {inviteData.positions.description}
+                  {inviteData.positions.rules}
                 </p>
               )}
             </div>

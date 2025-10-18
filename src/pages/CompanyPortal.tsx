@@ -38,7 +38,7 @@ const CompanyPortal = () => {
   const [inviteUrl, setInviteUrl] = useState("");
   const [newPosition, setNewPosition] = useState({
     name: "",
-    description: "",
+    rules: "",
   });
 
   useEffect(() => {
@@ -88,7 +88,7 @@ const CompanyPortal = () => {
       .from("positions")
       .insert({
         name: newPosition.name,
-        description: newPosition.description,
+        rules: newPosition.rules,
         company_id: user.id,
       });
 
@@ -106,7 +106,7 @@ const CompanyPortal = () => {
       description: "Position created successfully",
     });
 
-    setNewPosition({ name: "", description: "" });
+    setNewPosition({ name: "", rules: "" });
     setIsCreateOpen(false);
     loadPositions();
   };
@@ -224,14 +224,14 @@ const CompanyPortal = () => {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="description">Description</Label>
+                    <Label htmlFor="rules">Rules</Label>
                     <Textarea
-                      id="description"
-                      value={newPosition.description}
+                      id="rules"
+                      value={newPosition.rules}
                       onChange={(e) =>
-                        setNewPosition({ ...newPosition, description: e.target.value })
+                        setNewPosition({ ...newPosition, rules: e.target.value })
                       }
-                      placeholder="Describe the position..."
+                      placeholder="List the rules for this position..."
                       rows={4}
                     />
                   </div>
@@ -255,7 +255,7 @@ const CompanyPortal = () => {
               <TableHeader>
                 <TableRow>
                   <TableHead>Name</TableHead>
-                  <TableHead>Description</TableHead>
+                  <TableHead>Rules</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -264,7 +264,7 @@ const CompanyPortal = () => {
                   <TableRow key={position.id}>
                     <TableCell className="font-medium">{position.name}</TableCell>
                     <TableCell className="text-muted-foreground">
-                      {position.description || "No description"}
+                      {position.rules || "No rules set"}
                     </TableCell>
                     <TableCell className="text-right">
                       <Button
