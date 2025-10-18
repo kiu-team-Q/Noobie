@@ -77,10 +77,6 @@ const CompanyPortal = () => {
           </div>
           
           <div className="space-y-4">
-            <div>
-              <p className="text-sm text-muted-foreground">Role</p>
-              <p className="text-lg font-medium">{profile?.role}</p>
-            </div>
             {profile?.position && (
               <div>
                 <p className="text-sm text-muted-foreground">Position</p>

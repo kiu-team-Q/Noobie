@@ -50,9 +50,9 @@ export function useAuth() {
   const fetchUserRole = async (userId: string) => {
     try {
       const { data, error } = await supabase
-        .from('users')
+        .from('user_roles')
         .select('role')
-        .eq('id', userId)
+        .eq('user_id', userId)
         .single();
 
       if (error) throw error;
