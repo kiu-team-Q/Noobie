@@ -136,6 +136,57 @@ export type Database = {
           },
         ]
       }
+      rules_files: {
+        Row: {
+          company_id: string
+          created_at: string | null
+          file_content: Json | null
+          file_name: string
+          file_type: string
+          id: string
+          role_id: string
+          rules_count: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          company_id: string
+          created_at?: string | null
+          file_content?: Json | null
+          file_name: string
+          file_type: string
+          id?: string
+          role_id: string
+          rules_count?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          company_id?: string
+          created_at?: string | null
+          file_content?: Json | null
+          file_name?: string
+          file_type?: string
+          id?: string
+          role_id?: string
+          rules_count?: number | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rules_files_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rules_files_role_id_fkey"
+            columns: ["role_id"]
+            isOneToOne: false
+            referencedRelation: "roles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

@@ -12,6 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
 interface RuleFile {
+  id?: string;
   name: string;
   type: "style" | "security" | "workflow" | "mentorship";
   rulesCount: number;
@@ -43,6 +44,7 @@ const CompanyPortal = () => {
   const [uploadedRules, setUploadedRules] = useState<RuleFile[]>([]);
   const [interns, setInterns] = useState<Intern[]>([]);
   const [roles, setRoles] = useState<Role[]>([]);
+  const [selectedRoleForRules, setSelectedRoleForRules] = useState<string>("");
   const [internEmail, setInternEmail] = useState("");
   const [selectedRole, setSelectedRole] = useState("");
   const [newRoleName, setNewRoleName] = useState("");
@@ -65,6 +67,12 @@ const CompanyPortal = () => {
     loadInterns(id);
   }, [navigate]);
 
+  useEffect(() => {
+    if (selectedRoleForRules) {
+      loadRulesForRole(selectedRoleForRules);
+    }
+  }, [selectedRoleForRules]);
+
   const loadRoles = async (compId: string) => {
     const { data, error } = await supabase
       .from("roles")
@@ -74,6 +82,28 @@ const CompanyPortal = () => {
 
     if (!error && data) {
       setRoles(data);
+      // Auto-select first role for rules
+      if (data.length > 0 && !selectedRoleForRules) {
+        setSelectedRoleForRules(data[0].id);
+      }
+    }
+  };
+
+  const loadRulesForRole = async (roleId: string) => {
+    const { data, error } = await supabase
+      .from("rules_files")
+      .select("*")
+      .eq("role_id", roleId);
+
+    if (!error && data) {
+      setUploadedRules(data.map(rule => ({
+        id: rule.id,
+        name: rule.file_name,
+        type: rule.file_type as "style" | "security" | "workflow" | "mentorship",
+        rulesCount: rule.rules_count,
+      })));
+    } else {
+      setUploadedRules([]);
     }
   };
 
@@ -126,19 +156,53 @@ const CompanyPortal = () => {
     loadRoles(companyId);
   };
 
-  const handleRuleUpload = () => {
-    const mockRules: RuleFile[] = [
-      { name: "style_rules.json", type: "style", rulesCount: 8 },
-      { name: "security_rules.json", type: "security", rulesCount: 12 },
-      { name: "workflow_rules.json", type: "workflow", rulesCount: 6 },
-      { name: "mentorship_tips.json", type: "mentorship", rulesCount: 15 },
+  const handleRuleUpload = async () => {
+    if (!selectedRoleForRules) {
+      toast({
+        title: "Select a Role",
+        description: "Please select a role before uploading rules",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Simulate uploading multiple rule files
+    const mockRules: Array<{file_name: string, file_type: string, rules_count: number}> = [
+      { file_name: "style_rules.json", file_type: "style", rules_count: 8 },
+      { file_name: "security_rules.json", file_type: "security", rules_count: 12 },
+      { file_name: "workflow_rules.json", file_type: "workflow", rules_count: 6 },
+      { file_name: "mentorship_tips.json", file_type: "mentorship", rules_count: 15 },
     ];
+
+    // Insert all rules for the selected role
+    const { error } = await supabase
+      .from("rules_files")
+      .insert(
+        mockRules.map(rule => ({
+          company_id: companyId,
+          role_id: selectedRoleForRules,
+          file_name: rule.file_name,
+          file_type: rule.file_type,
+          rules_count: rule.rules_count,
+          file_content: { mock: "data" },
+        }))
+      );
+
+    if (error) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+      return;
+    }
     
-    setUploadedRules(mockRules);
     toast({
       title: "Rules Uploaded Successfully",
       description: "All rule files have been parsed and loaded",
     });
+
+    loadRulesForRole(selectedRoleForRules);
   };
 
   const handleInviteIntern = async () => {
@@ -341,18 +405,41 @@ const CompanyPortal = () => {
                 Upload a ZIP file containing your company's coding standards, security rules, and workflow guidelines
               </p>
 
-              <div className="flex gap-4">
-                <Input type="file" accept=".zip" className="flex-1" />
-                <Button onClick={handleRuleUpload} className="gap-2 bg-primary hover:bg-primary/90">
-                  <Upload className="h-4 w-4" />
-                  Upload ZIP
-                </Button>
+              <div className="mb-4">
+                <Label htmlFor="roleSelectRules">Select Role for Rules</Label>
+                <select
+                  id="roleSelectRules"
+                  value={selectedRoleForRules}
+                  onChange={(e) => setSelectedRoleForRules(e.target.value)}
+                  className="mt-2 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring"
+                >
+                  <option value="">Select a role...</option>
+                  {roles.map((role) => (
+                    <option key={role.id} value={role.id}>
+                      {role.role_name}
+                    </option>
+                  ))}
+                </select>
               </div>
+
+              {selectedRoleForRules ? (
+                <div className="flex gap-4">
+                  <Input type="file" accept=".zip" className="flex-1" />
+                  <Button onClick={handleRuleUpload} className="gap-2 bg-primary hover:bg-primary/90">
+                    <Upload className="h-4 w-4" />
+                    Upload ZIP
+                  </Button>
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground">Please select a role first</p>
+              )}
             </Card>
 
-            {uploadedRules.length > 0 && (
+            {uploadedRules.length > 0 && selectedRoleForRules && (
               <div>
-                <h3 className="mb-4 text-lg font-semibold text-foreground">Loaded Rules</h3>
+                <h3 className="mb-4 text-lg font-semibold text-foreground">
+                  Loaded Rules for {roles.find(r => r.id === selectedRoleForRules)?.role_name}
+                </h3>
                 <div className="grid gap-4 md:grid-cols-2">
                   {uploadedRules.map((rule, index) => (
                     <Card key={index} className="border-border bg-card p-4">
