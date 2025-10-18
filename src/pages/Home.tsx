@@ -27,15 +27,10 @@ const Home = () => {
             </p>
             
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <Link to="/admin/login">
-                <Button size="lg" className="gap-2 bg-primary hover:bg-primary/90">
-                  Admin Login
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
-              </Link>
               <Link to="/company/login">
-                <Button size="lg" variant="outline" className="gap-2">
+                <Button size="lg" className="gap-2 bg-primary hover:bg-primary/90">
                   Company Login
+                  <ArrowRight className="h-4 w-4" />
                 </Button>
               </Link>
               <Link to="/intern/login">
@@ -150,7 +145,7 @@ const Home = () => {
             <p className="mb-8 text-lg text-muted-foreground">
               Start using DevBuddy today and help your developers become productive faster.
             </p>
-            <Link to="/admin/login">
+            <Link to="/company/login">
               <Button size="lg" className="gap-2 bg-primary hover:bg-primary/90">
                 Get Started
                 <ArrowRight className="h-4 w-4" />
