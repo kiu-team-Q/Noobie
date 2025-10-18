@@ -38,6 +38,11 @@ const InternLogin = () => {
       if (error) throw error;
 
       if (data) {
+        // Clear company session if exists
+        localStorage.removeItem("company_id");
+        localStorage.removeItem("company_email");
+        localStorage.removeItem("company_name");
+        
         localStorage.setItem("intern_id", data.id);
         localStorage.setItem("intern_email", data.email);
         localStorage.setItem("intern_role", data.roles?.role_name || "");
