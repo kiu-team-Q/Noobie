@@ -18,7 +18,7 @@ const Home = () => {
             </div>
             
             <h1 className="mb-6 text-5xl font-bold tracking-tight text-foreground md:text-6xl">
-              Welcome to <span className="text-primary">DevBuddy 2.0</span>
+              Welcome to <span className="text-primary">Noobie</span>
             </h1>
             
             <p className="mb-8 text-xl text-muted-foreground">
@@ -102,7 +102,7 @@ const Home = () => {
               Custom Rule Sets
             </h3>
             <p className="text-muted-foreground">
-              Upload your company's coding standards as ZIP files. DevBuddy adapts 
+              Upload your company's coding standards as ZIP files. Noobie adapts 
               to your unique requirements.
             </p>
           </Card>
@@ -143,7 +143,7 @@ const Home = () => {
               Ready to Transform Your Onboarding?
             </h2>
             <p className="mb-8 text-lg text-muted-foreground">
-              Start using DevBuddy today and help your developers become productive faster.
+              Start using Noobie today and help your developers become productive faster.
             </p>
             <Link to="/company/login">
               <Button size="lg" className="gap-2 bg-primary hover:bg-primary/90">
