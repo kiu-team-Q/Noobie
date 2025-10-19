@@ -40,8 +40,8 @@ export const Footer = () => {
               Office
             </h3>
             <address className="text-sm text-muted-foreground not-italic">
-              123 Tech Street<br />
-              San Francisco, CA 94105
+              Tskhinvali Str. N3<br />
+              Kutaisi
             </address>
           </div>
         </div>
