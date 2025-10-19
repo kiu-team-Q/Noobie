@@ -8,12 +8,11 @@ import { Loader2, CheckCircle2, AlertCircle, Code2, Sparkles } from "lucide-reac
 
 interface CodeEditorProps {
   rules: string;
-  onSubmit?: (code: string, feedback?: string) => Promise<void>;
-  onFeedbackReceived?: (feedback: string) => void;
+  onSubmit?: (code: string) => Promise<void>;
   isSubmitting?: boolean;
 }
 
-export const CodeEditor = ({ rules, onSubmit, onFeedbackReceived, isSubmitting = false }: CodeEditorProps) => {
+export const CodeEditor = ({ rules, onSubmit, isSubmitting = false }: CodeEditorProps) => {
   const { toast } = useToast();
   const [code, setCode] = useState('// Write your code here\n\n');
   const [feedback, setFeedback] = useState<string>("");
@@ -46,9 +45,6 @@ export const CodeEditor = ({ rules, onSubmit, onFeedbackReceived, isSubmitting =
       }
 
       setFeedback(data.feedback);
-      if (onFeedbackReceived) {
-        onFeedbackReceived(data.feedback);
-      }
       console.log('Feedback received:', data.feedback);
       toast({
         title: "Code checked",
@@ -163,7 +159,7 @@ export const CodeEditor = ({ rules, onSubmit, onFeedbackReceived, isSubmitting =
 
             {onSubmit && (
               <Button
-                onClick={() => onSubmit(code, feedback)}
+                onClick={() => onSubmit(code)}
                 disabled={isSubmitting || isChecking}
                 className="flex-1 h-12 text-base font-semibold"
               >

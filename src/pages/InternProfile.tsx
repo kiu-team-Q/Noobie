@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ArrowLeft, LogOut, User, Award, Briefcase, Building2, Code, Calendar, ChevronDown, ChevronUp } from "lucide-react";
+import { ArrowLeft, LogOut, User, Award, Briefcase, Building2, Code, Calendar } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -23,7 +23,6 @@ const InternProfile = () => {
   const [positionData, setPositionData] = useState<any>(null);
   const [companyData, setCompanyData] = useState<any>(null);
   const [submissions, setSubmissions] = useState<any[]>([]);
-  const [expandedSubmission, setExpandedSubmission] = useState<string | null>(null);
 
   useEffect(() => {
     if (!loading && (!user || role !== 'intern')) {
@@ -219,52 +218,24 @@ const InternProfile = () => {
                     <TableHead>Submitted</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead className="text-right">Points</TableHead>
-                    <TableHead className="w-10"></TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {submissions.map((submission) => (
-                    <>
-                      <TableRow 
-                        key={submission.id}
-                        className="cursor-pointer hover:bg-muted/50"
-                        onClick={() => setExpandedSubmission(expandedSubmission === submission.id ? null : submission.id)}
-                      >
-                        <TableCell className="flex items-center gap-2">
-                          <Calendar className="h-4 w-4 text-muted-foreground" />
-                          {new Date(submission.submitted_at).toLocaleDateString()} {new Date(submission.submitted_at).toLocaleTimeString()}
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant="outline">{submission.status}</Badge>
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <Badge className="bg-primary/10 text-primary border-primary/20">
-                            +{submission.points_awarded} pts
-                          </Badge>
-                        </TableCell>
-                        <TableCell>
-                          {submission.feedback && (
-                            expandedSubmission === submission.id ? 
-                              <ChevronUp className="h-4 w-4 text-muted-foreground" /> : 
-                              <ChevronDown className="h-4 w-4 text-muted-foreground" />
-                          )}
-                        </TableCell>
-                      </TableRow>
-                      {expandedSubmission === submission.id && submission.feedback && (
-                        <TableRow>
-                          <TableCell colSpan={4} className="bg-muted/30 p-4">
-                            <div className="space-y-2">
-                              <p className="text-sm font-semibold text-foreground">Code Review:</p>
-                              <div className="bg-background/50 p-3 rounded border border-border/50">
-                                <pre className="text-xs whitespace-pre-wrap text-foreground/90">
-{submission.feedback}
-                                </pre>
-                              </div>
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      )}
-                    </>
+                    <TableRow key={submission.id}>
+                      <TableCell className="flex items-center gap-2">
+                        <Calendar className="h-4 w-4 text-muted-foreground" />
+                        {new Date(submission.submitted_at).toLocaleDateString()} {new Date(submission.submitted_at).toLocaleTimeString()}
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="outline">{submission.status}</Badge>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Badge className="bg-primary/10 text-primary border-primary/20">
+                          +{submission.points_awarded} pts
+                        </Badge>
+                      </TableCell>
+                    </TableRow>
                   ))}
                 </TableBody>
               </Table>

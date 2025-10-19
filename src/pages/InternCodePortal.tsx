@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ArrowLeft, Briefcase } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { ArrowLeft, Send } from "lucide-react";
+import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { CodeEditor } from "@/components/CodeEditor";
+import { useNavigate } from "react-router-dom";
 
 const InternCodePortal = () => {
   const { toast } = useToast();
@@ -14,7 +15,6 @@ const InternCodePortal = () => {
   const { user, role, loading } = useAuth();
   const [positionData, setPositionData] = useState<any>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [lastFeedback, setLastFeedback] = useState<string>("");
 
   useEffect(() => {
     if (!loading && (!user || role !== 'intern')) {
@@ -49,7 +49,7 @@ const InternCodePortal = () => {
     }
   };
 
-  const handleSubmitCode = async (code: string, feedback?: string) => {
+  const handleSubmitCode = async (code: string) => {
     if (!user || !code.trim()) return;
 
     setIsSubmitting(true);
@@ -60,7 +60,6 @@ const InternCodePortal = () => {
         .insert({
           intern_id: user.id,
           code: code,
-          feedback: feedback || lastFeedback || null,
           points_awarded: 10,
           status: 'submitted'
         });
@@ -127,47 +126,20 @@ const InternCodePortal = () => {
       </div>
 
       <div className="container mx-auto px-6 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Rules Sidebar */}
-          {positionData?.rules && (
-            <div className="lg:col-span-1">
-              <Card className="border-border/50 bg-card shadow-sm sticky top-8">
-                <div className="p-6">
-                  <div className="flex items-center gap-2 mb-4">
-                    <div className="p-1.5 rounded-md bg-primary/10">
-                      <Briefcase className="h-4 w-4 text-primary" />
-                    </div>
-                    <h3 className="text-lg font-semibold text-card-foreground">Company Rules</h3>
-                  </div>
-                  <div className="bg-muted/30 p-4 rounded-lg border border-border/50 max-h-[600px] overflow-y-auto">
-                    <pre className="whitespace-pre-wrap text-sm font-mono text-foreground/90 leading-relaxed">
-{positionData.rules}
-                    </pre>
-                  </div>
-                </div>
-              </Card>
-            </div>
-          )}
-
-          {/* Code Editor */}
-          <div className={positionData?.rules ? "lg:col-span-2" : "lg:col-span-3"}>
-            {positionData?.rules ? (
-              <CodeEditor 
-                rules={positionData.rules} 
-                onSubmit={handleSubmitCode}
-                onFeedbackReceived={setLastFeedback}
-                isSubmitting={isSubmitting}
-              />
-            ) : (
-              <Card className="p-8 text-center">
-                <p className="text-muted-foreground mb-4">No position assigned yet</p>
-                <Link to="/intern">
-                  <Button>Go to Profile</Button>
-                </Link>
-              </Card>
-            )}
-          </div>
-        </div>
+        {positionData?.rules ? (
+          <CodeEditor 
+            rules={positionData.rules} 
+            onSubmit={handleSubmitCode}
+            isSubmitting={isSubmitting}
+          />
+        ) : (
+          <Card className="p-8 text-center">
+            <p className="text-muted-foreground mb-4">No position assigned yet</p>
+            <Link to="/intern">
+              <Button>Go to Profile</Button>
+            </Link>
+          </Card>
+        )}
       </div>
     </div>
   );
