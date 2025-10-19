@@ -67,6 +67,39 @@ export const CodeEditor = ({ rules }: CodeEditorProps) => {
     }
   };
 
+  const parseFeedback = () => {
+    const lines = feedback.split('\n');
+    let currentSection = '';
+    const sections: { [key: string]: string[] } = {
+      score: [],
+      strengths: [],
+      issues: [],
+      recommendations: []
+    };
+    
+    lines.forEach(line => {
+      const trimmed = line.trim();
+      if (!trimmed) return;
+      
+      if (trimmed.startsWith('SCORE:')) {
+        currentSection = 'score';
+        sections.score.push(trimmed.replace('SCORE:', '').trim());
+      } else if (trimmed.startsWith('STRENGTHS:')) {
+        currentSection = 'strengths';
+      } else if (trimmed.startsWith('ISSUES:')) {
+        currentSection = 'issues';
+      } else if (trimmed.startsWith('RECOMMENDATIONS:')) {
+        currentSection = 'recommendations';
+      } else if (trimmed.startsWith('-') || trimmed.startsWith('•')) {
+        if (currentSection) {
+          sections[currentSection].push(trimmed.replace(/^[-•]\s*/, ''));
+        }
+      }
+    });
+    
+    return sections;
+  };
+
   return (
     <div className="space-y-6">
       <Card className="border-border/50 bg-gradient-to-br from-card to-muted/20 shadow-lg overflow-hidden">
@@ -121,86 +154,93 @@ export const CodeEditor = ({ rules }: CodeEditorProps) => {
         </div>
       </Card>
 
-      {feedback && (
-        <Card className="border-border/50 bg-gradient-to-br from-card via-card to-primary/5 shadow-lg animate-fade-in">
-          <div className="p-6">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="p-2 rounded-lg bg-primary/10">
-                <Sparkles className="h-6 w-6 text-primary" />
+      {feedback && (() => {
+        const sections = parseFeedback();
+        
+        return (
+          <Card className="border-border/50 bg-gradient-to-br from-card via-card to-primary/5 shadow-lg animate-fade-in">
+            <div className="p-6">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-2 rounded-lg bg-primary/10">
+                  <Sparkles className="h-6 w-6 text-primary" />
+                </div>
+                <h3 className="text-xl font-bold text-card-foreground">AI Code Review</h3>
               </div>
-              <h3 className="text-xl font-bold text-card-foreground">AI Feedback</h3>
-            </div>
-            
-            <div className="space-y-4">
-              {feedback.split('\n\n').map((section, idx) => {
-                const lines = section.split('\n');
-                const isPositive = section.toLowerCase().includes('good') || 
-                                 section.toLowerCase().includes('correct') ||
-                                 section.toLowerCase().includes('well done') ||
-                                 section.toLowerCase().includes('great');
-                const isNegative = section.toLowerCase().includes('issue') || 
-                                 section.toLowerCase().includes('error') ||
-                                 section.toLowerCase().includes('violat') ||
-                                 section.toLowerCase().includes('missing');
-                
-                return (
-                  <div 
-                    key={idx}
-                    className={`p-4 rounded-lg border ${
-                      isPositive 
-                        ? 'bg-green-500/10 border-green-500/30' 
-                        : isNegative 
-                        ? 'bg-destructive/10 border-destructive/30'
-                        : 'bg-muted/30 border-border/50'
-                    }`}
-                  >
-                    <div className="flex gap-3">
-                      {isPositive && (
-                        <CheckCircle2 className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
-                      )}
-                      {isNegative && (
-                        <AlertCircle className="h-5 w-5 text-destructive flex-shrink-0 mt-0.5" />
-                      )}
-                      <div className="flex-1 space-y-2">
-                        {lines.map((line, lineIdx) => {
-                          if (!line.trim()) return null;
-                          
-                          const isHeading = line === line.toUpperCase() || line.startsWith('##');
-                          
-                          if (isHeading) {
-                            return (
-                              <h4 key={lineIdx} className="font-bold text-base text-foreground">
-                                {line.replace(/^#+\s*/, '')}
-                              </h4>
-                            );
-                          }
-                          
-                          if (line.trim().match(/^[-*•]\s/)) {
-                            return (
-                              <div key={lineIdx} className="flex gap-2 ml-4">
-                                <span className="text-primary mt-1">•</span>
-                                <p className="text-sm text-foreground/90 leading-relaxed">
-                                  {line.replace(/^[-*•]\s*/, '')}
-                                </p>
-                              </div>
-                            );
-                          }
-                          
-                          return (
-                            <p key={lineIdx} className="text-sm text-foreground/90 leading-relaxed">
-                              {line}
-                            </p>
-                          );
-                        })}
+              
+              <div className="space-y-4">
+                {/* Score Section */}
+                {sections.score.length > 0 && (
+                  <div className="p-6 rounded-xl bg-gradient-to-r from-primary/20 to-primary/5 border border-primary/30">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="text-sm font-semibold text-muted-foreground mb-1">Code Quality Score</h4>
+                        <p className="text-4xl font-bold text-primary">{sections.score[0]}</p>
+                      </div>
+                      <div className="h-20 w-20 rounded-full bg-primary/10 flex items-center justify-center">
+                        <Sparkles className="h-10 w-10 text-primary" />
                       </div>
                     </div>
                   </div>
-                );
-              })}
+                )}
+                
+                {/* Strengths Section */}
+                {sections.strengths.length > 0 && (
+                  <div className="p-5 rounded-xl bg-green-500/10 border border-green-500/30">
+                    <div className="flex items-center gap-3 mb-4">
+                      <CheckCircle2 className="h-6 w-6 text-green-500" />
+                      <h4 className="text-lg font-bold text-foreground">Strengths</h4>
+                    </div>
+                    <div className="space-y-2">
+                      {sections.strengths.map((item, idx) => (
+                        <div key={idx} className="flex gap-3">
+                          <span className="text-green-500 mt-1 flex-shrink-0">✓</span>
+                          <p className="text-sm text-foreground/90 leading-relaxed">{item}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                
+                {/* Issues Section */}
+                {sections.issues.length > 0 && (
+                  <div className="p-5 rounded-xl bg-destructive/10 border border-destructive/30">
+                    <div className="flex items-center gap-3 mb-4">
+                      <AlertCircle className="h-6 w-6 text-destructive" />
+                      <h4 className="text-lg font-bold text-foreground">Issues Found</h4>
+                    </div>
+                    <div className="space-y-2">
+                      {sections.issues.map((item, idx) => (
+                        <div key={idx} className="flex gap-3">
+                          <span className="text-destructive mt-1 flex-shrink-0">✕</span>
+                          <p className="text-sm text-foreground/90 leading-relaxed">{item}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                
+                {/* Recommendations Section */}
+                {sections.recommendations.length > 0 && (
+                  <div className="p-5 rounded-xl bg-blue-500/10 border border-blue-500/30">
+                    <div className="flex items-center gap-3 mb-4">
+                      <Code2 className="h-6 w-6 text-blue-500" />
+                      <h4 className="text-lg font-bold text-foreground">Recommendations</h4>
+                    </div>
+                    <div className="space-y-2">
+                      {sections.recommendations.map((item, idx) => (
+                        <div key={idx} className="flex gap-3">
+                          <span className="text-blue-500 mt-1 flex-shrink-0">→</span>
+                          <p className="text-sm text-foreground/90 leading-relaxed">{item}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        </Card>
-      )}
+          </Card>
+        );
+      })()}
     </div>
   );
 };
