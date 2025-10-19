@@ -51,7 +51,7 @@ export const Leaderboard = ({
         </div>
       </Card>;
   }
-  return <Card className="border-border/50 bg-card shadow-sm animate-fade-in">
+  return <Card className="border-border/50 bg-card shadow-sm animate-fade-in h-full flex flex-col">
       <div className="p-6 pb-4">
         <div className="flex items-center gap-2">
           <div className="p-1.5 rounded-md bg-primary/10">
@@ -61,7 +61,7 @@ export const Leaderboard = ({
         </div>
       </div>
       
-      <ScrollArea className="h-[300px] px-6 pb-6">
+      <ScrollArea className="flex-1 px-6 pb-6">
         <div className="space-y-2">
           {leaderboard.length === 0 ? <p className="text-sm text-muted-foreground text-center py-4">
               No other interns in this position yet
