@@ -5,10 +5,8 @@ import { Link } from "react-router-dom";
 import { NoobieLogo } from "@/components/NoobieLogo";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-
 const Home = () => {
-  return (
-    <div className="min-h-screen bg-background">
+  return <div className="min-h-screen bg-background">
       <Header />
       {/* Hero Section */}
       <section className="relative overflow-hidden border-b border-border">
@@ -27,12 +25,16 @@ const Home = () => {
               <NoobieLogo textSize="text-5xl md:text-7xl" className="text-primary" />
             </h1>
             
-            <p className="mb-8 text-xl text-muted-foreground leading-relaxed animate-fade-in" style={{ animationDelay: "0.1s" }}>
+            <p className="mb-8 text-xl text-muted-foreground leading-relaxed animate-fade-in" style={{
+            animationDelay: "0.1s"
+          }}>
               The intelligent mentor platform that helps new developers onboard faster with 
               company-specific AI guidance, real-time code analysis, and personalized learning paths.
             </p>
             
-            <div className="flex flex-col items-center justify-center gap-4 sm:flex-row animate-fade-in" style={{ animationDelay: "0.2s" }}>
+            <div className="flex flex-col items-center justify-center gap-4 sm:flex-row animate-fade-in" style={{
+            animationDelay: "0.2s"
+          }}>
               <Link to="/auth">
                 <Button size="lg" className="gap-2 bg-primary hover:bg-primary/90 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-primary/50">
                   Get Started
@@ -102,10 +104,7 @@ const Home = () => {
             <h3 className="mb-2 text-xl font-semibold text-card-foreground">
               Custom Rule Sets
             </h3>
-            <p className="text-muted-foreground leading-relaxed">
-              Upload your company's coding standards as ZIP files. Noobie adapts 
-              to your unique requirements.
-            </p>
+            <p className="text-muted-foreground leading-relaxed">Upload your company's coding standards as rules. Noobie adapts to your unique requirements.</p>
           </Card>
 
           <Card className="group border-border bg-card p-6 transition-all duration-300 hover:border-violet-500/50 hover:shadow-lg hover:shadow-violet-500/10 hover:-translate-y-1">
@@ -162,16 +161,12 @@ const Home = () => {
           
           {/* Admin Access Note */}
           <div className="mt-12 text-center">
-            <p className="text-xs text-muted-foreground">
-              Admin access available through the auth page
-            </p>
+            
           </div>
         </div>
       </section>
 
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default Home;
