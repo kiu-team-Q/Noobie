@@ -51,7 +51,7 @@ export const Leaderboard = ({
         </div>
       </Card>;
   }
-  return <Card className="border-border/50 bg-card shadow-sm animate-fade-in h-[352px] flex flex-col">
+  return <Card className="border-border/50 bg-card shadow-sm animate-fade-in h-[305px] flex flex-col">
       <div className="p-6 pb-3">
         <div className="flex items-center gap-2">
           <div className="p-1.5 rounded-md bg-primary/10">
