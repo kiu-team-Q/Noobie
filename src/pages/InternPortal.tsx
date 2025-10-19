@@ -95,40 +95,56 @@ const InternPortal = () => {
           {/* Left Column - Profile & Guidelines */}
           <div className="space-y-6">
             {/* Compact Profile Card */}
-            <Card className="border-border/50 bg-gradient-to-br from-card to-muted/20 shadow-lg animate-fade-in">
-              <div className="p-6">
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary/60">
-                    <User className="h-6 w-6 text-primary-foreground" />
+            <Card className="border-border/50 bg-card shadow-sm animate-fade-in">
+              <div className="p-6 space-y-4">
+                {/* Name and Email */}
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary/70 shadow-sm">
+                    <User className="h-5 w-5 text-primary-foreground" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h2 className="text-xl font-bold text-card-foreground truncate">
+                    <h2 className="text-lg font-semibold text-card-foreground">
                       {profile?.first_name} {profile?.last_name}
                     </h2>
                     <p className="text-sm text-muted-foreground truncate">{profile?.email}</p>
                   </div>
                 </div>
 
-                {/* Stats Grid */}
-                <div className="grid grid-cols-3 gap-3 mt-4">
-                  <div className="text-center p-3 rounded-lg bg-primary/5">
-                    <Award className="h-5 w-5 text-primary mx-auto mb-1" />
+                {/* Divider */}
+                <div className="border-t border-border/50"></div>
+
+                {/* Company Badge */}
+                {companyData && (
+                  <div className="flex items-center gap-3 p-3 rounded-lg bg-blue-500/10 border border-blue-500/20">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-500/20">
+                      <Building2 className="h-5 w-5 text-blue-600" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-medium text-blue-600 uppercase tracking-wide">Company</p>
+                      <p className="text-sm font-semibold text-blue-700 truncate">
+                        {companyData.first_name} {companyData.last_name}
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Stats */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="p-3 rounded-lg bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20">
+                    <div className="flex items-center gap-2 mb-1">
+                      <Award className="h-4 w-4 text-primary" />
+                      <p className="text-xs font-medium text-muted-foreground">Rating</p>
+                    </div>
                     <p className="text-2xl font-bold text-primary">{profile?.rating_points || 100}</p>
-                    <p className="text-xs text-muted-foreground">Points</p>
                   </div>
-                  <div className="text-center p-3 rounded-lg bg-accent/5">
-                    <Briefcase className="h-5 w-5 text-accent-foreground mx-auto mb-1" />
+                  <div className="p-3 rounded-lg bg-gradient-to-br from-accent/10 to-accent/5 border border-accent/20">
+                    <div className="flex items-center gap-2 mb-1">
+                      <Briefcase className="h-4 w-4 text-accent-foreground" />
+                      <p className="text-xs font-medium text-muted-foreground">Position</p>
+                    </div>
                     <p className="text-sm font-semibold text-card-foreground truncate">
-                      {positionData?.name || "None"}
+                      {positionData?.name || "Not assigned"}
                     </p>
-                    <p className="text-xs text-muted-foreground">Position</p>
-                  </div>
-                  <div className="text-center p-3 rounded-lg bg-secondary/5">
-                    <Building2 className="h-5 w-5 text-secondary-foreground mx-auto mb-1" />
-                    <p className="text-sm font-semibold text-card-foreground truncate">
-                      {companyData?.first_name || "None"}
-                    </p>
-                    <p className="text-xs text-muted-foreground">Company</p>
                   </div>
                 </div>
               </div>
@@ -136,15 +152,15 @@ const InternPortal = () => {
 
             {/* Company Guidelines */}
             {positionData?.rules && (
-              <Card className="border-border/50 bg-gradient-to-br from-card to-muted/20 shadow-lg animate-fade-in flex-1" style={{ animationDelay: '100ms' }}>
+              <Card className="border-border/50 bg-card shadow-sm animate-fade-in flex-1" style={{ animationDelay: '100ms' }}>
                 <div className="p-6">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="p-2 rounded-lg bg-primary/10">
-                      <Briefcase className="h-5 w-5 text-primary" />
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="p-1.5 rounded-md bg-primary/10">
+                      <Briefcase className="h-4 w-4 text-primary" />
                     </div>
-                    <h3 className="text-xl font-bold text-card-foreground">Company Guidelines</h3>
+                    <h3 className="text-lg font-semibold text-card-foreground">Company Guidelines</h3>
                   </div>
-                  <div className="bg-muted/30 p-4 rounded-lg border border-border/50 max-h-[600px] overflow-y-auto">
+                  <div className="bg-muted/30 p-4 rounded-lg border border-border/50 max-h-[500px] overflow-y-auto">
                     <pre className="whitespace-pre-wrap text-sm font-mono text-foreground/90 leading-relaxed">
 {positionData.rules}
                     </pre>
