@@ -8,7 +8,14 @@ import https from 'https';
 
 // MAIN FUNCTION USING CURL REQUEST TO LOVABLE API (SENDING GIT DIFF ONLY)
 async function main() {
-    console.log("🚀 Running AI Commit Review with Lovable❤️ AI...");
+    console.log(`⠀⠀⠀⠀⠀⠀⠀⠀⣠⣶⣶⣶⣦⠀⠀
+⠀⠀⣠⣤⣤⣄⣀⣾⣿⠟⠛⠻⢿⣷⠀
+⢰⣿⡿⠛⠙⠻⣿⣿⠁⠀⠀⠀⣶⢿⡇
+⢿⣿⣇⠀⠀⠀⠈⠏⠀⠀⠀ Lovable
+⠀⠻⣿⣷⣦⣤⣀⠀⠀⠀⠀⣾⡿⠃⠀
+⠀⠀⠀⠀⠉⠉⠻⣿⣄⣴⣿⠟⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⣿⡿⠟⠁⠀⠀⠀⠀`);
+    console.log("🚀 Running AI Commit Review with Lovable❤️  AI...");
 
     // Get email and password from env vars or prompt
     let email = process.env.NOOBIE_EMAIL;
