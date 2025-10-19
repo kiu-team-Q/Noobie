@@ -15,10 +15,6 @@ const Home = () => {
         
         <div className="container relative mx-auto px-6 py-24">
           <div className="mx-auto max-w-3xl text-center">
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-2 text-sm text-primary">
-              <Zap className="h-4 w-4" />
-              AI-Powered Developer Onboarding
-            </div>
             
             <h1 className="mb-6 flex flex-col items-center gap-2">
               <span className="text-2xl font-medium text-muted-foreground">Welcome to</span>
