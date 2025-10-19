@@ -46,6 +46,11 @@ export default function Auth() {
         positions (
           name,
           rules
+        ),
+        company:users!invitations_company_id_fkey (
+          first_name,
+          last_name,
+          email
         )
       `)
       .eq('token', inviteToken)
@@ -147,7 +152,7 @@ export default function Auth() {
           </CardDescription>
           {inviteData && (
             <div className="mt-4 p-4 bg-muted rounded-lg text-left">
-              <p className="text-sm font-medium">You've been invited to:</p>
+              <p className="text-sm font-medium">You've been invited by {inviteData.company?.first_name} {inviteData.company?.last_name} to:</p>
               <p className="text-lg font-semibold text-primary">{inviteData.positions?.name}</p>
               {inviteData.positions?.rules && (
                 <p className="text-sm text-muted-foreground mt-1">
