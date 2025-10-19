@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Code2, Shield, Zap, Users, ArrowRight, Upload, MessageSquare } from "lucide-react";
 import { Link } from "react-router-dom";
+import { NoobieLogo } from "@/components/NoobieLogo";
 
 const Home = () => {
   return (
@@ -17,8 +18,9 @@ const Home = () => {
               AI-Powered Developer Onboarding
             </div>
             
-            <h1 className="mb-6 text-5xl font-bold tracking-tight text-foreground md:text-6xl">
-              Welcome to <span className="text-primary">Noobie</span>
+            <h1 className="mb-6 flex flex-col items-center gap-2">
+              <span className="text-2xl font-medium text-muted-foreground">Welcome to</span>
+              <NoobieLogo textSize="text-5xl md:text-6xl" className="text-primary" />
             </h1>
             
             <p className="mb-8 text-xl text-muted-foreground">
@@ -137,9 +139,11 @@ const Home = () => {
             <h2 className="mb-4 text-3xl font-bold text-foreground">
               Ready to Transform Your Onboarding?
             </h2>
-            <p className="mb-8 text-lg text-muted-foreground">
-              Start using Noobie today and help your developers become productive faster.
-            </p>
+            <div className="mb-8 flex flex-col items-center gap-3">
+              <p className="text-lg text-muted-foreground">Start using</p>
+              <NoobieLogo textSize="text-3xl" className="text-primary" />
+              <p className="text-lg text-muted-foreground">today and help your developers become productive faster.</p>
+            </div>
             <Link to="/auth">
               <Button size="lg" className="gap-2 bg-primary hover:bg-primary/90">
                 Get Started
