@@ -101,9 +101,9 @@ const InternProfile = () => {
 
       <div className="container mx-auto px-6 py-8 space-y-6">
         {/* Top Section - Profile & Leaderboard */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:grid-rows-1">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:items-start">
           {/* Profile Card */}
-          <Card className="border-border/50 bg-card shadow-sm animate-fade-in lg:h-[500px]">
+          <Card className="border-border/50 bg-card shadow-sm animate-fade-in">
             <div className="p-6 space-y-4">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary/70 shadow-sm">
@@ -153,7 +153,7 @@ const InternProfile = () => {
           </Card>
 
           {/* Leaderboard */}
-          {profile?.company_id && profile?.position_id && user && <div className="animate-fade-in lg:h-[500px]" style={{
+          {profile?.company_id && profile?.position_id && user && <div className="animate-fade-in" style={{
           animationDelay: '100ms'
         }}>
               <Leaderboard companyId={profile.company_id} positionId={profile.position_id} currentUserId={user.id} />
