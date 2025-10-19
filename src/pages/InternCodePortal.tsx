@@ -15,6 +15,7 @@ const InternCodePortal = () => {
   const { user, role, loading } = useAuth();
   const [positionData, setPositionData] = useState<any>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [lastFeedback, setLastFeedback] = useState<string>("");
 
   useEffect(() => {
     if (!loading && (!user || role !== 'intern')) {
@@ -49,7 +50,7 @@ const InternCodePortal = () => {
     }
   };
 
-  const handleSubmitCode = async (code: string) => {
+  const handleSubmitCode = async (code: string, feedback?: string) => {
     if (!user || !code.trim()) return;
 
     setIsSubmitting(true);
@@ -60,6 +61,7 @@ const InternCodePortal = () => {
         .insert({
           intern_id: user.id,
           code: code,
+          feedback: feedback || null,
           points_awarded: 10,
           status: 'submitted'
         });
@@ -131,6 +133,7 @@ const InternCodePortal = () => {
             rules={positionData.rules} 
             onSubmit={handleSubmitCode}
             isSubmitting={isSubmitting}
+            onFeedbackReceived={setLastFeedback}
           />
         ) : (
           <Card className="p-8 text-center">

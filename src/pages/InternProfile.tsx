@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ArrowLeft, LogOut, User, Award, Briefcase, Building2, Code, Calendar } from "lucide-react";
+import { ArrowLeft, LogOut, User, Award, Briefcase, Building2, Code, Calendar, ChevronDown, ChevronUp } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -23,6 +23,7 @@ const InternProfile = () => {
   const [positionData, setPositionData] = useState<any>(null);
   const [companyData, setCompanyData] = useState<any>(null);
   const [submissions, setSubmissions] = useState<any[]>([]);
+  const [expandedSubmission, setExpandedSubmission] = useState<string | null>(null);
 
   useEffect(() => {
     if (!loading && (!user || role !== 'intern')) {
@@ -222,20 +223,44 @@ const InternProfile = () => {
                 </TableHeader>
                 <TableBody>
                   {submissions.map((submission) => (
-                    <TableRow key={submission.id}>
-                      <TableCell className="flex items-center gap-2">
-                        <Calendar className="h-4 w-4 text-muted-foreground" />
-                        {new Date(submission.submitted_at).toLocaleDateString()} {new Date(submission.submitted_at).toLocaleTimeString()}
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="outline">{submission.status}</Badge>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <Badge className="bg-primary/10 text-primary border-primary/20">
-                          +{submission.points_awarded} pts
-                        </Badge>
-                      </TableCell>
-                    </TableRow>
+                    <>
+                      <TableRow 
+                        key={submission.id}
+                        className={submission.feedback ? "cursor-pointer hover:bg-muted/50" : ""}
+                        onClick={() => submission.feedback && setExpandedSubmission(expandedSubmission === submission.id ? null : submission.id)}
+                      >
+                        <TableCell className="flex items-center gap-2">
+                          <Calendar className="h-4 w-4 text-muted-foreground" />
+                          {new Date(submission.submitted_at).toLocaleDateString()} {new Date(submission.submitted_at).toLocaleTimeString()}
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant="outline">{submission.status}</Badge>
+                        </TableCell>
+                        <TableCell className="text-right flex items-center justify-end gap-2">
+                          <Badge className="bg-primary/10 text-primary border-primary/20">
+                            +{submission.points_awarded} pts
+                          </Badge>
+                          {submission.feedback && (
+                            expandedSubmission === submission.id ? 
+                              <ChevronUp className="h-4 w-4 text-muted-foreground" /> : 
+                              <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                          )}
+                        </TableCell>
+                      </TableRow>
+                      {expandedSubmission === submission.id && submission.feedback && (
+                        <TableRow>
+                          <TableCell colSpan={3} className="bg-muted/30 border-t">
+                            <div className="p-4 space-y-2">
+                              <h4 className="font-semibold text-sm flex items-center gap-2">
+                                <Code className="h-4 w-4" />
+                                AI Code Review
+                              </h4>
+                              <pre className="text-sm whitespace-pre-wrap text-muted-foreground font-sans leading-relaxed">{submission.feedback}</pre>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </>
                   ))}
                 </TableBody>
               </Table>
