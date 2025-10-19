@@ -15,7 +15,6 @@ const InternCodePortal = () => {
   const { user, role, loading } = useAuth();
   const [positionData, setPositionData] = useState<any>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [lastFeedback, setLastFeedback] = useState<string>("");
 
   useEffect(() => {
     if (!loading && (!user || role !== 'intern')) {
@@ -50,18 +49,28 @@ const InternCodePortal = () => {
     }
   };
 
-  const handleSubmitCode = async (code: string, feedback?: string) => {
-    if (!user || !code.trim()) return;
+  const handleSubmitCode = async (code: string): Promise<string | null> => {
+    if (!user || !code.trim()) return null;
 
     setIsSubmitting(true);
     try {
-      // Insert submission
+      // First get AI feedback
+      const { data: aiData, error: aiError } = await supabase.functions.invoke("check-code", {
+        body: { code, rules: positionData.rules },
+      });
+
+      if (aiError) throw aiError;
+      if (aiData.error) throw new Error(aiData.error);
+
+      const feedback = aiData.feedback;
+
+      // Insert submission with feedback
       const { error: insertError } = await supabase
         .from("code_submissions")
         .insert({
           intern_id: user.id,
           code: code,
-          feedback: feedback || null,
+          feedback: feedback,
           points_awarded: 10,
           status: 'submitted'
         });
@@ -86,19 +95,27 @@ const InternCodePortal = () => {
 
       toast({
         title: "Code Submitted!",
-        description: "Your code has been submitted successfully. +10 points!",
+        description: "Your code has been reviewed and submitted. +10 points!",
       });
 
-      // Navigate back to profile
-      setTimeout(() => {
-        navigate("/intern");
-      }, 1000);
+      // Return feedback to display
+      return feedback;
     } catch (error: any) {
+      console.error('Error submitting code:', error);
+      
+      let errorMessage = "Failed to submit code";
+      if (error.message?.includes("Rate limit")) {
+        errorMessage = "Too many requests. Please wait a moment.";
+      } else if (error.message?.includes("credits")) {
+        errorMessage = "AI credits exhausted. Please contact admin.";
+      }
+      
       toast({
         title: "Submission Failed",
-        description: error.message,
+        description: errorMessage,
         variant: "destructive",
       });
+      return null;
     } finally {
       setIsSubmitting(false);
     }
@@ -133,7 +150,6 @@ const InternCodePortal = () => {
             rules={positionData.rules} 
             onSubmit={handleSubmitCode}
             isSubmitting={isSubmitting}
-            onFeedbackReceived={setLastFeedback}
           />
         ) : (
           <Card className="p-8 text-center">

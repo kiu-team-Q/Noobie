@@ -8,18 +8,16 @@ import { Loader2, CheckCircle2, AlertCircle, Code2, Sparkles } from "lucide-reac
 
 interface CodeEditorProps {
   rules: string;
-  onSubmit?: (code: string, feedback?: string) => Promise<void>;
+  onSubmit?: (code: string) => Promise<string | null>;
   isSubmitting?: boolean;
-  onFeedbackReceived?: (feedback: string) => void;
 }
 
-export const CodeEditor = ({ rules, onSubmit, isSubmitting = false, onFeedbackReceived }: CodeEditorProps) => {
+export const CodeEditor = ({ rules, onSubmit, isSubmitting = false }: CodeEditorProps) => {
   const { toast } = useToast();
   const [code, setCode] = useState('// Write your code here\n\n');
   const [feedback, setFeedback] = useState<string>("");
-  const [isChecking, setIsChecking] = useState(false);
 
-  const handleCheckCode = async () => {
+  const handleSubmitCode = async () => {
     if (!code.trim() || code.trim() === '// Write your code here') {
       toast({
         title: "No code",
@@ -29,48 +27,22 @@ export const CodeEditor = ({ rules, onSubmit, isSubmitting = false, onFeedbackRe
       return;
     }
 
-    setIsChecking(true);
-    setFeedback("");
+    if (!onSubmit) return;
 
     try {
-      const { data, error } = await supabase.functions.invoke("check-code", {
-        body: { code, rules },
-      });
-
-      if (error) {
-        throw error;
+      // Get AI feedback first
+      const feedbackResult = await onSubmit(code);
+      
+      if (feedbackResult) {
+        setFeedback(feedbackResult);
       }
-
-      if (data.error) {
-        throw new Error(data.error);
-      }
-
-      setFeedback(data.feedback);
-      console.log('Feedback received:', data.feedback);
-      if (onFeedbackReceived) {
-        onFeedbackReceived(data.feedback);
-      }
-      toast({
-        title: "Code checked",
-        description: "Review the feedback below",
-      });
     } catch (error: any) {
-      console.error('Error checking code:', error);
-      
-      let errorMessage = "Failed to check code";
-      if (error.message?.includes("Rate limit")) {
-        errorMessage = "Too many requests. Please wait a moment.";
-      } else if (error.message?.includes("credits")) {
-        errorMessage = "AI credits exhausted. Please contact admin.";
-      }
-      
+      console.error('Error submitting code:', error);
       toast({
         title: "Error",
-        description: errorMessage,
+        description: "Failed to submit code",
         variant: "destructive",
       });
-    } finally {
-      setIsChecking(false);
     }
   };
 
@@ -141,46 +113,25 @@ export const CodeEditor = ({ rules, onSubmit, isSubmitting = false, onFeedbackRe
             />
           </div>
 
-          <div className="flex gap-3">
+          {onSubmit && (
             <Button
-              onClick={handleCheckCode}
-              disabled={isChecking}
-              variant="outline"
-              className="flex-1 h-12 text-base font-semibold"
+              onClick={handleSubmitCode}
+              disabled={isSubmitting}
+              className="w-full h-12 text-base font-semibold"
             >
-              {isChecking ? (
+              {isSubmitting ? (
                 <>
                   <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                  Analyzing...
+                  Submitting...
                 </>
               ) : (
                 <>
-                  <Sparkles className="mr-2 h-5 w-5" />
-                  Check Code
+                  <CheckCircle2 className="mr-2 h-5 w-5" />
+                  Submit Code
                 </>
               )}
             </Button>
-
-            {onSubmit && (
-              <Button
-                onClick={() => onSubmit(code, feedback)}
-                disabled={isSubmitting || isChecking}
-                className="flex-1 h-12 text-base font-semibold"
-              >
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                    Submitting...
-                  </>
-                ) : (
-                  <>
-                    <CheckCircle2 className="mr-2 h-5 w-5" />
-                    Submit Code
-                  </>
-                )}
-              </Button>
-            )}
-          </div>
+          )}
         </div>
       </Card>
 
