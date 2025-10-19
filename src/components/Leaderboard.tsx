@@ -51,8 +51,8 @@ export const Leaderboard = ({
         </div>
       </Card>;
   }
-  return <Card className="border-border/50 bg-card shadow-sm animate-fade-in">
-      <div className="p-6 pb-4">
+  return <Card className="border-border/50 bg-card shadow-sm animate-fade-in h-[352px] flex flex-col">
+      <div className="p-6 pb-3">
         <div className="flex items-center gap-2">
           <div className="p-1.5 rounded-md bg-primary/10">
             <Trophy className="h-4 w-4 text-primary" />
@@ -61,12 +61,12 @@ export const Leaderboard = ({
         </div>
       </div>
       
-      <ScrollArea className="h-[300px] px-6 pb-6">
-        <div className="space-y-2">
+      <ScrollArea className="flex-1 px-6 pb-6">
+        <div className="space-y-1.5">
           {leaderboard.length === 0 ? <p className="text-sm text-muted-foreground text-center py-4">
               No other interns in this position yet
-            </p> : leaderboard.map((entry, index) => <div key={entry.id} className={`flex items-center gap-3 p-3 rounded-lg transition-colors ${entry.id === currentUserId ? "bg-primary/10 border border-primary/20" : "bg-muted/30 hover:bg-muted/50"}`}>
-                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-background">
+            </p> : leaderboard.map((entry, index) => <div key={entry.id} className={`flex items-center gap-2.5 p-2 rounded-lg transition-colors ${entry.id === currentUserId ? "bg-primary/10 border border-primary/20" : "bg-muted/30 hover:bg-muted/50"}`}>
+                <div className="flex items-center justify-center w-7 h-7 rounded-full bg-background">
                   {getRankIcon(index)}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -77,7 +77,7 @@ export const Leaderboard = ({
                   <p className="text-xs text-muted-foreground">Rank #{index + 1}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-lg font-bold text-primary">{entry.rating_points}</p>
+                  <p className="text-base font-bold text-primary">{entry.rating_points}</p>
                   <p className="text-xs text-muted-foreground">points</p>
                 </div>
               </div>)}
