@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { NoobieLogo } from "./NoobieLogo";
+import { Mail, Phone, MapPin } from "lucide-react";
 
 export const Footer = () => {
   return (
@@ -14,51 +15,34 @@ export const Footer = () => {
           </div>
 
           <div>
-            <h3 className="font-semibold mb-4">Product</h3>
-            <ul className="space-y-2">
-              <li>
-                <Link to="/features" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                  Features
-                </Link>
-              </li>
-              <li>
-                <Link to="/pricing" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                  Pricing
-                </Link>
-              </li>
-            </ul>
+            <h3 className="font-semibold mb-4 flex items-center gap-2">
+              <Mail className="h-4 w-4" />
+              Email
+            </h3>
+            <a href="mailto:support@noobie.dev" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              support@noobie.dev
+            </a>
           </div>
 
           <div>
-            <h3 className="font-semibold mb-4">Company</h3>
-            <ul className="space-y-2">
-              <li>
-                <Link to="/about" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                  About Us
-                </Link>
-              </li>
-              <li>
-                <Link to="/contact" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                  Contact
-                </Link>
-              </li>
-            </ul>
+            <h3 className="font-semibold mb-4 flex items-center gap-2">
+              <Phone className="h-4 w-4" />
+              Phone
+            </h3>
+            <a href="tel:+15551234567" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              +1 (555) 123-4567
+            </a>
           </div>
 
           <div>
-            <h3 className="font-semibold mb-4">Legal</h3>
-            <ul className="space-y-2">
-              <li>
-                <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                  Privacy Policy
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                  Terms of Service
-                </a>
-              </li>
-            </ul>
+            <h3 className="font-semibold mb-4 flex items-center gap-2">
+              <MapPin className="h-4 w-4" />
+              Office
+            </h3>
+            <address className="text-sm text-muted-foreground not-italic">
+              123 Tech Street<br />
+              San Francisco, CA 94105
+            </address>
           </div>
         </div>
 
