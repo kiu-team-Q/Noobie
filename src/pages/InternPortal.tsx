@@ -31,36 +31,36 @@ const InternPortal = () => {
     
     const { data, error } = await supabase
       .from("users")
-      .select(`
-        *,
-        positions (
-          id,
-          name,
-          rules,
-          company_id
-        )
-      `)
+      .select("*")
       .eq("id", user.id)
       .single();
 
     if (!error && data) {
       setProfile(data);
       
-      // Load position data
-      if (data.positions) {
-        setPositionData(data.positions);
+      // Load position data if position_id exists
+      if (data.position_id) {
+        const { data: position } = await supabase
+          .from("positions")
+          .select("id, name, rules, company_id")
+          .eq("id", data.position_id)
+          .single();
         
-        // Load company data
-        if (data.positions.company_id) {
-          const { data: companyUser } = await supabase
-            .from("users")
-            .select("first_name, last_name, email")
-            .eq("id", data.positions.company_id)
-            .single();
-          
-          if (companyUser) {
-            setCompanyData(companyUser);
-          }
+        if (position) {
+          setPositionData(position);
+        }
+      }
+      
+      // Load company data if company_id exists
+      if (data.company_id) {
+        const { data: companyUser } = await supabase
+          .from("users")
+          .select("first_name, last_name, email")
+          .eq("id", data.company_id)
+          .single();
+        
+        if (companyUser) {
+          setCompanyData(companyUser);
         }
       }
     }
