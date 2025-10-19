@@ -72,14 +72,22 @@ serve(async (req) => {
     // Fetch company data
     let company = null;
     if (userData.company_id) {
-      const { data: companyData } = await supabase
+      console.log('Fetching company with ID:', userData.company_id);
+      const { data: companyData, error: companyError } = await supabase
         .from('users')
         .select('first_name, last_name')
         .eq('id', userData.company_id)
         .single();
       
+      if (companyError) {
+        console.error('Error fetching company:', companyError);
+      }
+      
       if (companyData) {
+        console.log('Company data found:', companyData);
         company = `${companyData.first_name} ${companyData.last_name}`;
+      } else {
+        console.log('No company data found for ID:', userData.company_id);
       }
     }
 
