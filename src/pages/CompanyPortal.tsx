@@ -66,6 +66,28 @@ const CompanyPortal = () => {
       loadProfile();
       loadPositions();
       loadInterns();
+      
+      // Set up real-time listener for new interns
+      const channel = supabase
+        .channel('company-interns-changes')
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'users',
+            filter: `company_id=eq.${user.id}`
+          },
+          () => {
+            // Reload interns when changes occur
+            loadInterns();
+          }
+        )
+        .subscribe();
+      
+      return () => {
+        supabase.removeChannel(channel);
+      };
     }
   }, [user, role, loading]);
 
