@@ -243,12 +243,25 @@ export const CodeEditor = ({ rules, onSubmit, isSubmitting = false, onGenerateTa
             </Button>
           )}
           
-          {mode === 'practice' && (
-            <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4 text-center">
-              <p className="text-sm text-blue-500 font-medium">
-                💡 Practice Mode: Write your solution above and switch to Submit Mode when ready
-              </p>
-            </div>
+          {mode === 'practice' && onSubmit && (
+            <Button
+              onClick={handleSubmitCode}
+              disabled={isSubmitting}
+              className="w-full h-12 text-base font-semibold"
+              variant="secondary"
+            >
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                  Getting Feedback...
+                </>
+              ) : (
+                <>
+                  <Sparkles className="mr-2 h-5 w-5" />
+                  Get AI Feedback
+                </>
+              )}
+            </Button>
           )}
         </div>
       </Card>
