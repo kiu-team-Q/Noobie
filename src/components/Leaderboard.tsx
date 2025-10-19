@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Trophy, Medal, Award } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 interface LeaderboardEntry {
@@ -50,15 +51,17 @@ export const Leaderboard = ({
         </div>
       </Card>;
   }
-  return <Card className="border-border/50 bg-card shadow-sm animate-fade-in">
-      <div className="p-6 px-[23px] py-[47px]">
-        <div className="flex items-center gap-2 mb-4">
+  return <Card className="border-border/50 bg-card shadow-sm animate-fade-in h-full flex flex-col">
+      <div className="p-6 pb-4">
+        <div className="flex items-center gap-2">
           <div className="p-1.5 rounded-md bg-primary/10">
             <Trophy className="h-4 w-4 text-primary" />
           </div>
           <h3 className="text-lg font-semibold text-card-foreground">Position Leaderboard</h3>
         </div>
-        
+      </div>
+      
+      <ScrollArea className="flex-1 px-6 pb-6">
         <div className="space-y-2">
           {leaderboard.length === 0 ? <p className="text-sm text-muted-foreground text-center py-4">
               No other interns in this position yet
@@ -79,6 +82,6 @@ export const Leaderboard = ({
                 </div>
               </div>)}
         </div>
-      </div>
+      </ScrollArea>
     </Card>;
 };
