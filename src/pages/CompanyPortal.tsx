@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ArrowLeft, LogOut, User, Plus, Copy, Briefcase } from "lucide-react";
+import { ArrowLeft, LogOut, User, Plus, Copy, Briefcase, Pencil } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -33,10 +33,16 @@ const CompanyPortal = () => {
   const [profile, setProfile] = useState<any>(null);
   const [positions, setPositions] = useState<any[]>([]);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
   const [isInviteOpen, setIsInviteOpen] = useState(false);
   const [selectedPosition, setSelectedPosition] = useState<string>("");
   const [inviteUrl, setInviteUrl] = useState("");
   const [newPosition, setNewPosition] = useState({
+    name: "",
+    rules: "",
+  });
+  const [editPosition, setEditPosition] = useState({
+    id: "",
     name: "",
     rules: "",
   });
@@ -109,6 +115,45 @@ const CompanyPortal = () => {
     setNewPosition({ name: "", rules: "" });
     setIsCreateOpen(false);
     loadPositions();
+  };
+
+  const handleEditPosition = async () => {
+    if (!user || !editPosition.name.trim()) return;
+
+    const { error } = await supabase
+      .from("positions")
+      .update({
+        name: editPosition.name,
+        rules: editPosition.rules,
+      })
+      .eq("id", editPosition.id);
+
+    if (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update position",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    toast({
+      title: "Success",
+      description: "Position updated successfully",
+    });
+
+    setEditPosition({ id: "", name: "", rules: "" });
+    setIsEditOpen(false);
+    loadPositions();
+  };
+
+  const openEditDialog = (position: any) => {
+    setEditPosition({
+      id: position.id,
+      name: position.name,
+      rules: position.rules || "",
+    });
+    setIsEditOpen(true);
   };
 
   const handleGenerateInvite = async (positionId: string) => {
@@ -267,13 +312,22 @@ const CompanyPortal = () => {
                       {position.rules || "No rules set"}
                     </TableCell>
                     <TableCell className="text-right">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => handleGenerateInvite(position.id)}
-                      >
-                        Generate Invite
-                      </Button>
+                      <div className="flex gap-2 justify-end">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => openEditDialog(position)}
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleGenerateInvite(position.id)}
+                        >
+                          Generate Invite
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -281,6 +335,48 @@ const CompanyPortal = () => {
             </Table>
           )}
         </Card>
+
+        <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Edit Position</DialogTitle>
+              <DialogDescription>
+                Update the position details.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="edit-name">Position Name</Label>
+                <Input
+                  id="edit-name"
+                  value={editPosition.name}
+                  onChange={(e) =>
+                    setEditPosition({ ...editPosition, name: e.target.value })
+                  }
+                  placeholder="e.g. Frontend Developer"
+                />
+              </div>
+              <div>
+                <Label htmlFor="edit-rules">Rules</Label>
+                <Textarea
+                  id="edit-rules"
+                  value={editPosition.rules}
+                  onChange={(e) =>
+                    setEditPosition({ ...editPosition, rules: e.target.value })
+                  }
+                  placeholder="List the rules for this position..."
+                  rows={4}
+                />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setIsEditOpen(false)}>
+                Cancel
+              </Button>
+              <Button onClick={handleEditPosition}>Save Changes</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
 
         <Dialog open={isInviteOpen} onOpenChange={setIsInviteOpen}>
           <DialogContent>
