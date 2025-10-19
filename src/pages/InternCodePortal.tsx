@@ -87,7 +87,7 @@ const InternCodePortal = () => {
     }
   };
 
-  const handleSubmitCode = async (code: string): Promise<string | null> => {
+  const handleSubmitCode = async (code: string, isPracticeMode: boolean): Promise<string | null> => {
     if (!user || !code.trim()) return null;
 
     setIsSubmitting(true);
@@ -102,23 +102,30 @@ const InternCodePortal = () => {
 
       const feedback = aiData.feedback;
 
-      // Insert submission with feedback (no points)
-      const { error: insertError } = await supabase
-        .from("code_submissions")
-        .insert({
-          intern_id: user.id,
-          code: code,
-          feedback: feedback,
-          points_awarded: 0,
-          status: 'submitted'
+      // Only save to database if NOT in practice mode
+      if (!isPracticeMode) {
+        const { error: insertError } = await supabase
+          .from("code_submissions")
+          .insert({
+            intern_id: user.id,
+            code: code,
+            feedback: feedback,
+            points_awarded: 0,
+            status: 'submitted'
+          });
+
+        if (insertError) throw insertError;
+
+        toast({
+          title: "Code Submitted!",
+          description: "Your code has been reviewed and submitted.",
         });
-
-      if (insertError) throw insertError;
-
-      toast({
-        title: "Code Submitted!",
-        description: "Your code has been reviewed and submitted.",
-      });
+      } else {
+        toast({
+          title: "Practice Feedback Received!",
+          description: "This is practice mode - no points or submissions recorded.",
+        });
+      }
 
       // Return feedback to display
       return feedback;

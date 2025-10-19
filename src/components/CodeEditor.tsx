@@ -8,7 +8,7 @@ import { Loader2, CheckCircle2, AlertCircle, Code2, Sparkles } from "lucide-reac
 
 interface CodeEditorProps {
   rules: string;
-  onSubmit?: (code: string) => Promise<string | null>;
+  onSubmit?: (code: string, isPracticeMode: boolean) => Promise<string | null>;
   isSubmitting?: boolean;
   onGenerateTasks?: () => Promise<string | null>;
   isGeneratingTasks?: boolean;
@@ -53,8 +53,9 @@ export const CodeEditor = ({ rules, onSubmit, isSubmitting = false, onGenerateTa
     if (!onSubmit) return;
 
     try {
-      // Get AI feedback first
-      const feedbackResult = await onSubmit(code);
+      // Get AI feedback - pass whether we're in practice mode
+      const isPracticeMode = mode === 'practice';
+      const feedbackResult = await onSubmit(code, isPracticeMode);
       
       if (feedbackResult) {
         setFeedback(feedbackResult);
