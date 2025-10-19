@@ -360,8 +360,8 @@ const CompanyPortal = () => {
                 {positions.map((position) => (
                   <TableRow key={position.id}>
                     <TableCell className="align-top">
-                      <Badge variant="outline" className="gap-1.5">
-                        <Briefcase className="h-3 w-3" />
+                      <Badge variant="outline" className="gap-1.5 text-base px-3 py-1.5">
+                        <Briefcase className="h-4 w-4" />
                         {position.name}
                       </Badge>
                     </TableCell>
