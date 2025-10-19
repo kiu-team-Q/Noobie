@@ -14,3 +14,6 @@ verify_jwt = false
 
 [functions.validate-commit]
 verify_jwt = false
+
+[functions.generate-training-tasks]
+verify_jwt = false
