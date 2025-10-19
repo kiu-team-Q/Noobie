@@ -48,7 +48,7 @@ const Features = () => {
       <Header />
       
       <div className="container mx-auto px-6 pt-32 pb-20">
-        <div className="mb-12 text-center">
+        <div className="mb-12 text-center animate-fade-in">
           <h1 className="mb-4 text-4xl font-bold text-foreground">Features</h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Everything you need to accelerate developer onboarding and maintain code quality
@@ -57,9 +57,13 @@ const Features = () => {
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto">
           {features.map((feature, index) => (
-            <Card key={index} className="border-border bg-card p-6 transition-all hover:border-primary/50">
-              <div className={`mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-${feature.color}/10`}>
-                <feature.icon className={`h-6 w-6 text-${feature.color}`} />
+            <Card 
+              key={index} 
+              className="group border-border bg-card p-6 transition-all duration-300 hover:border-primary/50 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/10 animate-fade-in"
+              style={{ animationDelay: `${index * 0.1}s` }}
+            >
+              <div className={`mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-${feature.color}/10 transition-all duration-300 group-hover:scale-110 group-hover:bg-${feature.color}/20`}>
+                <feature.icon className={`h-6 w-6 text-${feature.color} transition-transform duration-300 group-hover:rotate-3`} />
               </div>
               <h3 className="mb-2 text-xl font-semibold text-card-foreground">
                 {feature.title}

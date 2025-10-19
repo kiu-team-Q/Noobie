@@ -55,7 +55,7 @@ const Pricing = () => {
       <Header />
       
       <div className="container mx-auto px-6 pt-32 pb-20">
-        <div className="mb-12 text-center">
+        <div className="mb-12 text-center animate-fade-in">
           <h1 className="mb-4 text-4xl font-bold text-foreground">Pricing</h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Choose the perfect plan for your team's onboarding needs
@@ -66,7 +66,8 @@ const Pricing = () => {
           {plans.map((plan, index) => (
             <Card 
               key={index} 
-              className={`border-border bg-card p-8 relative ${plan.popular ? 'border-primary shadow-lg' : ''}`}
+              className={`border-border bg-card p-8 relative transition-all duration-300 hover:-translate-y-2 hover:shadow-xl animate-fade-in ${plan.popular ? 'border-primary shadow-lg' : ''}`}
+              style={{ animationDelay: `${index * 0.15}s` }}
             >
               {plan.popular && (
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground px-4 py-1 rounded-full text-sm font-medium">
@@ -94,7 +95,7 @@ const Pricing = () => {
 
               <Link to="/auth">
                 <Button 
-                  className="w-full" 
+                  className="w-full transition-all duration-300 hover:scale-105" 
                   variant={plan.popular ? "default" : "outline"}
                 >
                   Get Started

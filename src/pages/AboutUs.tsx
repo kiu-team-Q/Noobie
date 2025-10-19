@@ -10,7 +10,7 @@ const AboutUs = () => {
       <Header />
       
       <div className="container mx-auto px-6 pt-32 pb-20">
-        <div className="mb-12 text-center">
+        <div className="mb-12 text-center animate-fade-in">
           <div className="mb-6 flex justify-center">
             <NoobieLogo textSize="text-4xl" />
           </div>
@@ -21,9 +21,9 @@ const AboutUs = () => {
         </div>
 
         <div className="max-w-4xl mx-auto space-y-12">
-          <Card className="border-border bg-card p-8">
+          <Card className="border-border bg-card p-8 transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 animate-fade-in" style={{ animationDelay: "0.1s" }}>
             <div className="flex items-start gap-4 mb-4">
-              <div className="inline-flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
+              <div className="inline-flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 transition-all duration-300 hover:scale-110 hover:bg-primary/20">
                 <Target className="h-6 w-6 text-primary" />
               </div>
               <div>
@@ -37,9 +37,9 @@ const AboutUs = () => {
             </div>
           </Card>
 
-          <Card className="border-border bg-card p-8">
+          <Card className="border-border bg-card p-8 transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 animate-fade-in" style={{ animationDelay: "0.2s" }}>
             <div className="flex items-start gap-4 mb-4">
-              <div className="inline-flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
+              <div className="inline-flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 transition-all duration-300 hover:scale-110 hover:bg-primary/20">
                 <Lightbulb className="h-6 w-6 text-primary" />
               </div>
               <div>
@@ -53,9 +53,9 @@ const AboutUs = () => {
             </div>
           </Card>
 
-          <Card className="border-border bg-card p-8">
+          <Card className="border-border bg-card p-8 transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 animate-fade-in" style={{ animationDelay: "0.3s" }}>
             <div className="flex items-start gap-4 mb-4">
-              <div className="inline-flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
+              <div className="inline-flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 transition-all duration-300 hover:scale-110 hover:bg-primary/20">
                 <Users className="h-6 w-6 text-primary" />
               </div>
               <div>

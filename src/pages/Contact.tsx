@@ -24,7 +24,7 @@ const Contact = () => {
       <Header />
       
       <div className="container mx-auto px-6 pt-32 pb-20">
-        <div className="mb-12 text-center">
+        <div className="mb-12 text-center animate-fade-in">
           <h1 className="mb-4 text-4xl font-bold text-foreground">Contact Us</h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
@@ -32,7 +32,7 @@ const Contact = () => {
         </div>
 
         <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-          <Card className="border-border bg-card p-8">
+          <Card className="border-border bg-card p-8 transition-all duration-300 hover:border-primary/50 hover:shadow-lg animate-fade-in" style={{ animationDelay: "0.1s" }}>
             <h2 className="text-2xl font-bold text-card-foreground mb-6">Get in Touch</h2>
             
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -61,14 +61,14 @@ const Contact = () => {
                 />
               </div>
 
-              <Button type="submit" className="w-full">
+              <Button type="submit" className="w-full transition-all duration-300 hover:scale-105">
                 Send Message
               </Button>
             </form>
           </Card>
 
           <div className="space-y-6">
-            <Card className="border-border bg-card p-6">
+            <Card className="border-border bg-card p-6 transition-all duration-300 hover:border-primary/50 hover:shadow-lg animate-fade-in" style={{ animationDelay: "0.2s" }}>
               <div className="flex items-start gap-4">
                 <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
                   <Mail className="h-5 w-5 text-primary" />
@@ -80,7 +80,7 @@ const Contact = () => {
               </div>
             </Card>
 
-            <Card className="border-border bg-card p-6">
+            <Card className="border-border bg-card p-6 transition-all duration-300 hover:border-primary/50 hover:shadow-lg animate-fade-in" style={{ animationDelay: "0.3s" }}>
               <div className="flex items-start gap-4">
                 <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
                   <Phone className="h-5 w-5 text-primary" />
@@ -92,7 +92,7 @@ const Contact = () => {
               </div>
             </Card>
 
-            <Card className="border-border bg-card p-6">
+            <Card className="border-border bg-card p-6 transition-all duration-300 hover:border-primary/50 hover:shadow-lg animate-fade-in" style={{ animationDelay: "0.4s" }}>
               <div className="flex items-start gap-4">
                 <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
                   <MapPin className="h-5 w-5 text-primary" />
@@ -100,8 +100,8 @@ const Contact = () => {
                 <div>
                   <h3 className="font-semibold text-card-foreground mb-1">Office</h3>
                   <p className="text-muted-foreground">
-                    123 Tech Street<br />
-                    San Francisco, CA 94105
+                    Tskhinvali Str. N3<br />
+                    Kutaisi
                   </p>
                 </div>
               </div>
