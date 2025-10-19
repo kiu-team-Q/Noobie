@@ -9,48 +9,48 @@ export const NoobieLogo = ({ className = "", textSize = "text-5xl" }: NooglesLog
   const containerRef = useRef<HTMLDivElement>(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
-  // Disabled eye tracking animation for development
-  // useEffect(() => {
-  //   const handleMouseMove = (e: MouseEvent) => {
-  //     setMousePosition({ x: e.clientX, y: e.clientY });
-  //   };
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    };
 
-  //   window.addEventListener("mousemove", handleMouseMove);
-  //   return () => window.removeEventListener("mousemove", handleMouseMove);
-  // }, []);
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
 
-  // const calculatePupilPosition = (eyeRef: HTMLDivElement | null) => {
-  //   if (!eyeRef) return { x: 0, y: 0 };
+  const calculatePupilPosition = (eyeRef: HTMLDivElement | null) => {
+    if (!eyeRef) return { x: 0, y: 0 };
 
-  //   const eyeRect = eyeRef.getBoundingClientRect();
-  //   const eyeCenterX = eyeRect.left + eyeRect.width / 2;
-  //   const eyeCenterY = eyeRect.top + eyeRect.height / 2;
+    const eyeRect = eyeRef.getBoundingClientRect();
+    const eyeCenterX = eyeRect.left + eyeRect.width / 2;
+    const eyeCenterY = eyeRect.top + eyeRect.height / 2;
 
-  //   const angle = Math.atan2(
-  //     mousePosition.y - eyeCenterY,
-  //     mousePosition.x - eyeCenterX
-  //   );
+    const angle = Math.atan2(
+      mousePosition.y - eyeCenterY,
+      mousePosition.x - eyeCenterX
+    );
 
-  //   const maxDistance = 6;
-  //   const distance = Math.min(
-  //     maxDistance,
-  //     Math.sqrt(
-  //       Math.pow(mousePosition.x - eyeCenterX, 2) +
-  //         Math.pow(mousePosition.y - eyeCenterY, 2)
-  //     ) / 20
-  //   );
+    // Maximum distance the pupil can move from center (smaller for tighter movement)
+    const maxDistance = 6;
+    const distance = Math.min(
+      maxDistance,
+      Math.sqrt(
+        Math.pow(mousePosition.x - eyeCenterX, 2) +
+          Math.pow(mousePosition.y - eyeCenterY, 2)
+      ) / 20
+    );
 
-  //   return {
-  //     x: Math.cos(angle) * distance,
-  //     y: Math.sin(angle) * distance,
-  //   };
-  // };
+    return {
+      x: Math.cos(angle) * distance,
+      y: Math.sin(angle) * distance,
+    };
+  };
 
-  // const [leftEyeRef, setLeftEyeRef] = useState<HTMLDivElement | null>(null);
-  // const [rightEyeRef, setRightEyeRef] = useState<HTMLDivElement | null>(null);
+  const [leftEyeRef, setLeftEyeRef] = useState<HTMLDivElement | null>(null);
+  const [rightEyeRef, setRightEyeRef] = useState<HTMLDivElement | null>(null);
 
-  // const leftPupil = calculatePupilPosition(leftEyeRef);
-  // const rightPupil = calculatePupilPosition(rightEyeRef);
+  const leftPupil = calculatePupilPosition(leftEyeRef);
+  const rightPupil = calculatePupilPosition(rightEyeRef);
 
   return (
     <div ref={containerRef} className={`inline-flex items-center gap-0 ${className}`}>
@@ -58,6 +58,7 @@ export const NoobieLogo = ({ className = "", textSize = "text-5xl" }: NooglesLog
       
       {/* First eye (first "o") */}
       <div
+        ref={setLeftEyeRef}
         className="relative inline-flex items-center justify-center mx-1"
         style={{
           width: "1em",
@@ -71,7 +72,10 @@ export const NoobieLogo = ({ className = "", textSize = "text-5xl" }: NooglesLog
         {/* Iris */}
         <div className="absolute inset-0 flex items-center justify-center">
           <div
-            className="w-[60%] h-[60%] rounded-full bg-primary/80 flex items-center justify-center"
+            className="w-[60%] h-[60%] rounded-full bg-primary/80 flex items-center justify-center transition-transform duration-100 ease-out"
+            style={{
+              transform: `translate(${leftPupil.x}px, ${leftPupil.y}px)`,
+            }}
           >
             {/* Pupil */}
             <div className="w-[45%] h-[45%] rounded-full bg-foreground" />
@@ -83,6 +87,7 @@ export const NoobieLogo = ({ className = "", textSize = "text-5xl" }: NooglesLog
 
       {/* Second eye (second "o") */}
       <div
+        ref={setRightEyeRef}
         className="relative inline-flex items-center justify-center mx-1"
         style={{
           width: "1em",
@@ -96,7 +101,10 @@ export const NoobieLogo = ({ className = "", textSize = "text-5xl" }: NooglesLog
         {/* Iris */}
         <div className="absolute inset-0 flex items-center justify-center">
           <div
-            className="w-[60%] h-[60%] rounded-full bg-primary/80 flex items-center justify-center"
+            className="w-[60%] h-[60%] rounded-full bg-primary/80 flex items-center justify-center transition-transform duration-100 ease-out"
+            style={{
+              transform: `translate(${rightPupil.x}px, ${rightPupil.y}px)`,
+            }}
           >
             {/* Pupil */}
             <div className="w-[45%] h-[45%] rounded-full bg-foreground" />
