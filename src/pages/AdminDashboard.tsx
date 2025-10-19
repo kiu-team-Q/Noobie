@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Users, ArrowLeft, LogOut, Plus, Trash2 } from "lucide-react";
-import { Header } from "@/components/Header";
+import { CenteredHeader } from "@/components/CenteredHeader";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -196,7 +196,7 @@ const AdminDashboard = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header />
+      <CenteredHeader />
       <div className="border-b border-border">
         <div className="container mx-auto px-6 py-6">
           <div className="flex items-center justify-between">

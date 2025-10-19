@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { NoobieLogo } from "@/components/NoobieLogo";
-import { Header } from "@/components/Header";
+import { CenteredHeader } from "@/components/CenteredHeader";
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -138,7 +138,7 @@ export default function Auth() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted p-4">
-      <Header />
+      <CenteredHeader />
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <CardTitle className="flex justify-center">
