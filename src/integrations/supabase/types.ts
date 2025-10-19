@@ -18,6 +18,7 @@ export type Database = {
         Row: {
           code: string
           created_at: string | null
+          feedback: string | null
           id: string
           intern_id: string
           points_awarded: number | null
@@ -27,6 +28,7 @@ export type Database = {
         Insert: {
           code: string
           created_at?: string | null
+          feedback?: string | null
           id?: string
           intern_id: string
           points_awarded?: number | null
@@ -36,6 +38,7 @@ export type Database = {
         Update: {
           code?: string
           created_at?: string | null
+          feedback?: string | null
           id?: string
           intern_id?: string
           points_awarded?: number | null
