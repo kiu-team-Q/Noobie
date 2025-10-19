@@ -176,6 +176,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_intern_company_info: {
+        Args: { _user_id: string }
+        Returns: {
+          email: string
+          first_name: string
+          id: string
+          last_name: string
+        }[]
+      }
       get_user_role: {
         Args: { _user_id: string }
         Returns: Database["public"]["Enums"]["app_role"]

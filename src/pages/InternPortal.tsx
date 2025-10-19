@@ -51,16 +51,13 @@ const InternPortal = () => {
         }
       }
       
-      // Load company data if company_id exists
-      if (data.company_id) {
-        const { data: companyUser } = await supabase
-          .from("users")
-          .select("first_name, last_name, email")
-          .eq("id", data.company_id)
-          .single();
+      // Load company data using security definer function
+      if (user) {
+        const { data: companyInfo } = await supabase
+          .rpc("get_intern_company_info", { _user_id: user.id });
         
-        if (companyUser) {
-          setCompanyData(companyUser);
+        if (companyInfo && companyInfo.length > 0) {
+          setCompanyData(companyInfo[0]);
         }
       }
     }
