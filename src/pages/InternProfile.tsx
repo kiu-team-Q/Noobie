@@ -135,11 +135,11 @@ const InternProfile = () => {
             {companyData && (
               <div className="flex items-center gap-3 p-3 rounded-lg bg-blue-500/10 border border-blue-500/20">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-500/20">
-                  <Building2 className="h-5 w-5 text-blue-600" />
+                  <Building2 className="h-5 w-5 text-white" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs font-medium text-blue-600 uppercase tracking-wide">Company</p>
-                  <p className="text-sm font-semibold text-blue-700 truncate">
+                  <p className="text-xs font-medium text-white uppercase tracking-wide">Company</p>
+                  <p className="text-sm font-semibold text-white truncate">
                     {companyData.first_name} {companyData.last_name}
                   </p>
                 </div>
