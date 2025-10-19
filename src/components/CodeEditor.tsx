@@ -43,6 +43,7 @@ export const CodeEditor = ({ rules }: CodeEditorProps) => {
       }
 
       setFeedback(data.feedback);
+      console.log('Feedback received:', data.feedback);
       toast({
         title: "Code checked",
         description: "Review the feedback below",

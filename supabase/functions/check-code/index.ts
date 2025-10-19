@@ -20,12 +20,21 @@ serve(async (req) => {
 
     const systemPrompt = `You are a code reviewer checking code against company style rules. 
 Analyze the provided code and compare it against the given rules.
-Provide:
-1. A score out of 100 based on how well the code follows the rules
-2. Specific feedback on what's good and what needs improvement
-3. Concrete suggestions for improvement
 
-Be constructive and helpful.`;
+Format your response EXACTLY like this:
+
+SCORE: [number]/100
+
+STRENGTHS:
+- [list each good aspect of the code]
+
+ISSUES:
+- [list each rule violation or problem]
+
+RECOMMENDATIONS:
+- [list specific improvements]
+
+Be constructive, specific, and helpful. Always include all four sections even if some are empty.`;
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
@@ -68,6 +77,8 @@ Be constructive and helpful.`;
 
     const data = await response.json();
     const feedback = data.choices?.[0]?.message?.content;
+    
+    console.log('AI Response:', feedback);
 
     return new Response(
       JSON.stringify({ feedback }),
