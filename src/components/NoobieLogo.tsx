@@ -78,7 +78,7 @@ export const NoobieLogo = ({ className = "", textSize = "text-5xl" }: NooglesLog
             }}
           >
             {/* Pupil */}
-            <div className="w-[45%] h-[45%] rounded-full bg-foreground" />
+            <div className="w-[45%] h-[45%] rounded-full bg-white" />
             {/* Light reflection */}
             <div className="absolute top-[20%] left-[30%] w-[25%] h-[25%] rounded-full bg-background/60" />
           </div>
@@ -107,7 +107,7 @@ export const NoobieLogo = ({ className = "", textSize = "text-5xl" }: NooglesLog
             }}
           >
             {/* Pupil */}
-            <div className="w-[45%] h-[45%] rounded-full bg-foreground" />
+            <div className="w-[45%] h-[45%] rounded-full bg-white" />
             {/* Light reflection */}
             <div className="absolute top-[20%] left-[30%] w-[25%] h-[25%] rounded-full bg-background/60" />
           </div>
