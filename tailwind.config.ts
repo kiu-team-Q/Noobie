@@ -14,7 +14,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        cartoon: ["Fredoka", "sans-serif"],
+        cartoon: ["Bangers", "cursive"],
       },
       colors: {
         border: "hsl(var(--border))",
