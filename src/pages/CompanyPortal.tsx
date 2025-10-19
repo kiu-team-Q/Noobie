@@ -126,15 +126,25 @@ const CompanyPortal = () => {
       .from("users")
       .select(`
         *,
-        user_roles!inner(role),
+        user_roles(role),
         positions(name)
       `)
-      .eq("company_id", user.id)
-      .eq("user_roles.role", "intern");
+      .eq("company_id", user.id);
 
-    if (!error && data) {
-      setInterns(data);
+    console.log('loadInterns response:', { data, error });
+
+    if (error) {
+      console.error('Error loading interns:', error);
+      return;
     }
+
+    // Filter for interns only
+    const internsData = data?.filter((u: any) => 
+      Array.isArray(u.user_roles) && u.user_roles.some((role: any) => role.role === 'intern')
+    ) || [];
+    
+    console.log('Filtered interns:', internsData);
+    setInterns(internsData);
   };
 
   const handleCreatePosition = async () => {
