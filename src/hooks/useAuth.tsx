@@ -92,27 +92,39 @@ export function useAuth() {
 
   const signOut = async () => {
     try {
+      // Clear all state first
+      setUser(null);
+      setSession(null);
+      setRole(null);
+      
+      // Clear all localStorage items related to auth
+      const keys = Object.keys(localStorage);
+      keys.forEach(key => {
+        if (key.startsWith('sb-')) {
+          localStorage.removeItem(key);
+        }
+      });
+      
       // Sign out from Supabase
-      await supabase.auth.signOut();
+      await supabase.auth.signOut({ scope: 'local' });
+      
+      toast({
+        title: "Signed out",
+        description: "You have been signed out successfully.",
+      });
+      
+      // Force reload to clear any cached state
+      window.location.href = '/';
     } catch (error) {
       console.error('Sign out error:', error);
+      
+      // Even if there's an error, still clear everything and reload
+      setUser(null);
+      setSession(null);
+      setRole(null);
+      localStorage.clear();
+      window.location.href = '/';
     }
-    
-    // Force clear all local state
-    setUser(null);
-    setSession(null);
-    setRole(null);
-    
-    // Clear localStorage manually to ensure complete cleanup
-    localStorage.removeItem('sb-ffbfzqeblmokusdfbppr-auth-token');
-    
-    toast({
-      title: "Signed out",
-      description: "You have been signed out successfully.",
-    });
-    
-    // Force reload to clear any cached state
-    window.location.href = '/';
   };
 
   const redirectToDashboard = useCallback(() => {
