@@ -1,0 +1,25 @@
+{
+  "name": "noobie-commit",
+  "version": "1.0.0",
+  "description": "A Git pre-commit hook package for code style and security validation using the Gemini 2.5 Flash API, featuring user-specific RAG context.",
+  "main": "index.js",
+  "type": "module",
+  "bin": {
+    "noobie-commit": "./index.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "gemini",
+    "ai",
+    "git-hook",
+    "pre-commit",
+    "code-review"
+  ],
+  "author": "Your Name",
+  "license": "ISC",
+  "dependencies": {
+    "node-fetch": "^3.3.2"
+  }
+}
