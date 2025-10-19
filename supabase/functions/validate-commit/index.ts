@@ -204,6 +204,24 @@ Analyze the code changes and provide your assessment.`;
 
     const allowCommit = category !== 'C';
 
+    // Store submission in database
+    const points = Math.max(0, Math.round(percentageScore));
+    const submissionFeedback = `Category: ${category} | Score: ${Math.round(percentageScore * 10) / 10}%\n\n${parsed.feedback}\n\n${parsed.issues ? `Issues:\n${parsed.issues}` : ''}`;
+    
+    const { error: insertError } = await adminClient
+      .from('code_submissions')
+      .insert({
+        intern_id: authData.user.id,
+        code: gitDiff,
+        feedback: submissionFeedback,
+        points_awarded: points,
+        status: allowCommit ? 'approved' : 'rejected',
+      });
+
+    if (insertError) {
+      console.error('Error storing submission:', insertError);
+    }
+
     return new Response(
       JSON.stringify({
         category,
