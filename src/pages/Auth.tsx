@@ -1,25 +1,25 @@
-import { useState, useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useState, useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { NoobieLogo } from "@/components/NoobieLogo";
-import { useAuth } from '@/hooks/useAuth';
-import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/hooks/use-toast';
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Auth() {
   const [searchParams] = useSearchParams();
-  const inviteToken = searchParams.get('invite');
-  
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+  const inviteToken = searchParams.get("invite");
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [inviteData, setInviteData] = useState<any>(null);
-  
+
   const { signIn, user, role, redirectToDashboard } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -40,8 +40,9 @@ export default function Auth() {
     if (!inviteToken) return;
 
     const { data, error } = await supabase
-      .from('invitations')
-      .select(`
+      .from("invitations")
+      .select(
+        `
         *,
         positions (
           name,
@@ -52,20 +53,21 @@ export default function Auth() {
           last_name,
           email
         )
-      `)
-      .eq('token', inviteToken)
-      .is('used_at', null)
+      `,
+      )
+      .eq("token", inviteToken)
+      .is("used_at", null)
       .single();
 
-    if (error || !data) {
-      toast({
-        title: "Invalid Invite",
-        description: "This invite link is invalid or has expired",
-        variant: "destructive",
-      });
-      navigate('/auth');
-      return;
-    }
+    // if (error || !data) {
+    //   toast({
+    //     title: "Invalid Invite",
+    //     description: "This invite link is invalid or has expired",
+    //     variant: "destructive",
+    //   });
+    //   navigate('/auth');
+    //   return;
+    // }
 
     // Check if invitation is expired
     if (new Date(data.expires_at) < new Date()) {
@@ -74,7 +76,7 @@ export default function Auth() {
         description: "This invite link has expired",
         variant: "destructive",
       });
-      navigate('/auth');
+      navigate("/auth");
       return;
     }
 
@@ -90,7 +92,7 @@ export default function Auth() {
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!inviteToken) {
       toast({
         title: "Error",
@@ -124,11 +126,11 @@ export default function Auth() {
       });
 
       // Clear form and redirect to login
-      setEmail('');
-      setPassword('');
-      setFirstName('');
-      setLastName('');
-      navigate('/auth');
+      setEmail("");
+      setPassword("");
+      setFirstName("");
+      setLastName("");
+      navigate("/auth");
     } catch (error: any) {
       toast({
         title: "Error",
@@ -147,17 +149,15 @@ export default function Auth() {
           <CardTitle className="flex justify-center">
             <NoobieLogo textSize="text-3xl" className="text-primary" />
           </CardTitle>
-          <CardDescription>
-            {inviteToken ? 'Create your intern account' : 'Sign in to your account'}
-          </CardDescription>
+          <CardDescription>{inviteToken ? "Create your intern account" : "Sign in to your account"}</CardDescription>
           {inviteData && (
             <div className="mt-4 p-4 bg-muted rounded-lg text-left">
-              <p className="text-sm font-medium">You've been invited by {inviteData.company?.first_name} {inviteData.company?.last_name} to:</p>
+              <p className="text-sm font-medium">
+                You've been invited by {inviteData.company?.first_name} {inviteData.company?.last_name} to:
+              </p>
               <p className="text-lg font-semibold text-primary">{inviteData.positions?.name}</p>
               {inviteData.positions?.rules && (
-                <p className="text-sm text-muted-foreground mt-1">
-                  {inviteData.positions.rules}
-                </p>
+                <p className="text-sm text-muted-foreground mt-1">{inviteData.positions.rules}</p>
               )}
             </div>
           )}
@@ -210,7 +210,7 @@ export default function Auth() {
                 />
               </div>
               <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? 'Creating account...' : 'Sign Up'}
+                {isLoading ? "Creating account..." : "Sign Up"}
               </Button>
             </form>
           ) : (
@@ -237,16 +237,12 @@ export default function Auth() {
                 />
               </div>
               <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? 'Signing in...' : 'Sign In'}
+                {isLoading ? "Signing in..." : "Sign In"}
               </Button>
             </form>
           )}
-          
-          <Button
-            variant="ghost"
-            className="w-full mt-4"
-            onClick={() => navigate('/')}
-          >
+
+          <Button variant="ghost" className="w-full mt-4" onClick={() => navigate("/")}>
             Back to Home
           </Button>
         </CardContent>
