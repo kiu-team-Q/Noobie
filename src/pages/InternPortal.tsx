@@ -7,6 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { CodeEditor } from "@/components/CodeEditor";
+import { Leaderboard } from "@/components/Leaderboard";
 
 const InternPortal = () => {
   const { toast } = useToast();
@@ -91,8 +92,8 @@ const InternPortal = () => {
       </div>
 
       <div className="container mx-auto px-6 py-8 space-y-6">
-        {/* Top Section - Profile & Guidelines */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Top Section - Profile & Guidelines & Leaderboard */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Profile Card */}
           <Card className="border-border/50 bg-card shadow-sm animate-fade-in">
             <div className="p-6 space-y-4">
@@ -166,6 +167,17 @@ const InternPortal = () => {
                 </div>
               </div>
             </Card>
+          )}
+
+          {/* Leaderboard */}
+          {profile?.company_id && profile?.position_id && user && (
+            <div className="animate-fade-in" style={{ animationDelay: '200ms' }}>
+              <Leaderboard 
+                companyId={profile.company_id}
+                positionId={profile.position_id}
+                currentUserId={user.id}
+              />
+            </div>
           )}
         </div>
 
