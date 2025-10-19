@@ -54,7 +54,7 @@ export const NoobieLogo = ({ className = "", textSize = "text-5xl" }: NooglesLog
 
   return (
     <div ref={containerRef} className={`inline-flex items-center gap-0 ${className}`}>
-      <span className={`${textSize} font-cartoon font-bold tracking-tight text-white`}>N</span>
+      <span className={`${textSize} font-bold tracking-tight`}>N</span>
       
       {/* First eye (first "o") */}
       <div
@@ -78,7 +78,7 @@ export const NoobieLogo = ({ className = "", textSize = "text-5xl" }: NooglesLog
             }}
           >
             {/* Pupil */}
-            <div className="w-[45%] h-[45%] rounded-full bg-white" />
+            <div className="w-[45%] h-[45%] rounded-full bg-foreground" />
             {/* Light reflection */}
             <div className="absolute top-[20%] left-[30%] w-[25%] h-[25%] rounded-full bg-background/60" />
           </div>
@@ -107,14 +107,14 @@ export const NoobieLogo = ({ className = "", textSize = "text-5xl" }: NooglesLog
             }}
           >
             {/* Pupil */}
-            <div className="w-[45%] h-[45%] rounded-full bg-white" />
+            <div className="w-[45%] h-[45%] rounded-full bg-foreground" />
             {/* Light reflection */}
             <div className="absolute top-[20%] left-[30%] w-[25%] h-[25%] rounded-full bg-background/60" />
           </div>
         </div>
       </div>
 
-      <span className={`${textSize} font-cartoon font-bold tracking-tight text-white`}>bie</span>
+      <span className={`${textSize} font-bold tracking-tight`}>bie</span>
     </div>
   );
 };
