@@ -15,6 +15,7 @@ const InternCodePortal = () => {
   const { user, role, loading } = useAuth();
   const [positionData, setPositionData] = useState<any>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isGeneratingTasks, setIsGeneratingTasks] = useState(false);
 
   useEffect(() => {
     if (!loading && (!user || role !== 'intern')) {
@@ -46,6 +47,43 @@ const InternCodePortal = () => {
       if (position) {
         setPositionData(position);
       }
+    }
+  };
+
+  const handleGenerateTasks = async (): Promise<string | null> => {
+    setIsGeneratingTasks(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("generate-training-tasks", {
+        body: { rules: positionData.rules },
+      });
+
+      if (error) throw error;
+      if (data.error) throw new Error(data.error);
+
+      toast({
+        title: "Tasks Generated!",
+        description: "Practice tasks have been created based on your company guidelines.",
+      });
+
+      return data.tasks;
+    } catch (error: any) {
+      console.error('Error generating tasks:', error);
+      
+      let errorMessage = "Failed to generate tasks";
+      if (error.message?.includes("Rate limit")) {
+        errorMessage = "Too many requests. Please wait a moment.";
+      } else if (error.message?.includes("credits")) {
+        errorMessage = "AI credits exhausted. Please contact admin.";
+      }
+      
+      toast({
+        title: "Generation Failed",
+        description: errorMessage,
+        variant: "destructive",
+      });
+      return null;
+    } finally {
+      setIsGeneratingTasks(false);
     }
   };
 
@@ -134,6 +172,8 @@ const InternCodePortal = () => {
             rules={positionData.rules} 
             onSubmit={handleSubmitCode}
             isSubmitting={isSubmitting}
+            onGenerateTasks={handleGenerateTasks}
+            isGeneratingTasks={isGeneratingTasks}
           />
         ) : (
           <Card className="p-8 text-center">
