@@ -14,6 +14,44 @@ export type Database = {
   }
   public: {
     Tables: {
+      code_submissions: {
+        Row: {
+          code: string
+          created_at: string | null
+          id: string
+          intern_id: string
+          points_awarded: number | null
+          status: string | null
+          submitted_at: string | null
+        }
+        Insert: {
+          code: string
+          created_at?: string | null
+          id?: string
+          intern_id: string
+          points_awarded?: number | null
+          status?: string | null
+          submitted_at?: string | null
+        }
+        Update: {
+          code?: string
+          created_at?: string | null
+          id?: string
+          intern_id?: string
+          points_awarded?: number | null
+          status?: string | null
+          submitted_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "code_submissions_intern_id_fkey"
+            columns: ["intern_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       invitations: {
         Row: {
           company_id: string

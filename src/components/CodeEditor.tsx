@@ -8,9 +8,11 @@ import { Loader2, CheckCircle2, AlertCircle, Code2, Sparkles } from "lucide-reac
 
 interface CodeEditorProps {
   rules: string;
+  onSubmit?: (code: string) => Promise<void>;
+  isSubmitting?: boolean;
 }
 
-export const CodeEditor = ({ rules }: CodeEditorProps) => {
+export const CodeEditor = ({ rules, onSubmit, isSubmitting = false }: CodeEditorProps) => {
   const { toast } = useToast();
   const [code, setCode] = useState('// Write your code here\n\n');
   const [feedback, setFeedback] = useState<string>("");
@@ -135,23 +137,46 @@ export const CodeEditor = ({ rules }: CodeEditorProps) => {
             />
           </div>
 
-          <Button
-            onClick={handleCheckCode}
-            disabled={isChecking}
-            className="w-full h-12 text-base font-semibold shadow-lg hover:shadow-xl transition-all"
-          >
-            {isChecking ? (
-              <>
-                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                Analyzing your code...
-              </>
-            ) : (
-              <>
-                <Sparkles className="mr-2 h-5 w-5" />
-                Check Code Against Rules
-              </>
+          <div className="flex gap-3">
+            <Button
+              onClick={handleCheckCode}
+              disabled={isChecking}
+              variant="outline"
+              className="flex-1 h-12 text-base font-semibold"
+            >
+              {isChecking ? (
+                <>
+                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                  Analyzing...
+                </>
+              ) : (
+                <>
+                  <Sparkles className="mr-2 h-5 w-5" />
+                  Check Code
+                </>
+              )}
+            </Button>
+
+            {onSubmit && (
+              <Button
+                onClick={() => onSubmit(code)}
+                disabled={isSubmitting || isChecking}
+                className="flex-1 h-12 text-base font-semibold"
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                    Submitting...
+                  </>
+                ) : (
+                  <>
+                    <CheckCircle2 className="mr-2 h-5 w-5" />
+                    Submit Code
+                  </>
+                )}
+              </Button>
             )}
-          </Button>
+          </div>
         </div>
       </Card>
 

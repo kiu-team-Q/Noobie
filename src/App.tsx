@@ -7,6 +7,8 @@ import Auth from "./pages/Auth";
 import AdminDashboard from "./pages/AdminDashboard";
 import CompanyPortal from "./pages/CompanyPortal";
 import InternPortal from "./pages/InternPortal";
+import InternProfile from "./pages/InternProfile";
+import InternCodePortal from "./pages/InternCodePortal";
 import Features from "./pages/Features";
 import Pricing from "./pages/Pricing";
 import AboutUs from "./pages/AboutUs";
@@ -30,7 +32,10 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/company" element={<CompanyPortal />} />
-          <Route path="/intern" element={<InternPortal />} />
+          <Route path="/intern" element={<InternProfile />} />
+          <Route path="/intern/portal" element={<InternCodePortal />} />
+          {/* Legacy route - redirect to profile */}
+          <Route path="/intern/old" element={<InternPortal />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
