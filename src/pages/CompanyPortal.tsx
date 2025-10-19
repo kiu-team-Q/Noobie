@@ -359,33 +359,29 @@ const CompanyPortal = () => {
               <TableBody>
                 {positions.map((position) => (
                   <TableRow key={position.id}>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <Badge variant="outline" className="gap-1.5">
-                          <Briefcase className="h-3 w-3" />
-                          {position.name}
-                        </Badge>
-                      </div>
+                    <TableCell className="align-top">
+                      <Badge variant="outline" className="gap-1.5">
+                        <Briefcase className="h-3 w-3" />
+                        {position.name}
+                      </Badge>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="align-top">
                       {position.rules ? (
-                        <ScrollArea className="h-24 w-full rounded-md border border-border bg-card/50 p-3">
-                          <div className="space-y-2">
-                            {position.rules.split('\n').map((rule: string, index: number) => 
-                              rule.trim() && (
-                                <div key={index} className="flex items-start gap-2 text-sm">
-                                  <FileText className="h-3.5 w-3.5 text-primary mt-0.5 flex-shrink-0" />
-                                  <span className="text-muted-foreground leading-relaxed">{rule.trim()}</span>
-                                </div>
-                              )
-                            )}
-                          </div>
-                        </ScrollArea>
+                        <div className="space-y-1.5 py-1">
+                          {position.rules.split('\n').map((rule: string, index: number) => 
+                            rule.trim() && (
+                              <div key={index} className="flex items-start gap-2 text-sm">
+                                <span className="text-primary mt-0.5">•</span>
+                                <span className="text-muted-foreground leading-relaxed">{rule.trim()}</span>
+                              </div>
+                            )
+                          )}
+                        </div>
                       ) : (
                         <span className="text-muted-foreground text-sm italic">No guidelines set</span>
                       )}
                     </TableCell>
-                    <TableCell className="text-right">
+                    <TableCell className="text-right align-top">
                       <div className="flex gap-2 justify-end">
                         <Button
                           size="sm"
