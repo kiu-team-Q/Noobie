@@ -54,7 +54,7 @@ export const NoobieLogo = ({ className = "", textSize = "text-5xl" }: NooglesLog
 
   return (
     <div ref={containerRef} className={`inline-flex items-center gap-0 ${className}`}>
-      <span className={`${textSize} font-bold tracking-tight`}>N</span>
+      <span className={`${textSize} font-cartoon font-bold tracking-tight text-white`}>N</span>
       
       {/* First eye (first "o") */}
       <div
@@ -114,7 +114,7 @@ export const NoobieLogo = ({ className = "", textSize = "text-5xl" }: NooglesLog
         </div>
       </div>
 
-      <span className={`${textSize} font-bold tracking-tight`}>bie</span>
+      <span className={`${textSize} font-cartoon font-bold tracking-tight text-white`}>bie</span>
     </div>
   );
 };
