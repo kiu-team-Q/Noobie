@@ -95,9 +95,9 @@ const Home = () => {
             </p>
           </Card>
 
-          <Card className="group border-border bg-card p-6 transition-all duration-300 hover:border-amber-500/50 hover:shadow-lg hover:shadow-amber-500/10 hover:-translate-y-1">
-            <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-amber-500/10 transition-all duration-300 group-hover:scale-110 group-hover:bg-amber-500/20">
-              <Upload className="h-6 w-6 text-amber-500 transition-transform duration-300 group-hover:rotate-3" />
+          <Card className="group border-border bg-card p-6 transition-all duration-300 hover:border-pink-500/50 hover:shadow-lg hover:shadow-pink-500/10 hover:-translate-y-1">
+            <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-pink-500/10 transition-all duration-300 group-hover:scale-110 group-hover:bg-pink-500/20">
+              <Upload className="h-6 w-6 text-pink-500 transition-transform duration-300 group-hover:rotate-3" />
             </div>
             <h3 className="mb-2 text-xl font-semibold text-card-foreground">
               Custom Rule Sets
