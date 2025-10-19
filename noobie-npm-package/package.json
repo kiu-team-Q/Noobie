@@ -1,6 +1,6 @@
 {
   "name": "noobie-commit",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A Git pre-commit hook package for code style and security validation using the Gemini 2.5 Flash API, featuring user-specific RAG context.",
   "main": "index.js",
   "type": "module",
