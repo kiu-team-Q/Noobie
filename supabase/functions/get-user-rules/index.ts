@@ -49,7 +49,7 @@ serve(async (req) => {
     // Fetch user data using admin client to bypass RLS
     const { data: userData, error: userError } = await supabaseAdmin
       .from("users")
-      .select("first_name, last_name, company_id, position_id")
+      .select("first_name, last_name, company_id, position_id, rating_points")
       .eq("id", userId)
       .single();
 
@@ -102,6 +102,7 @@ serve(async (req) => {
       company,
       position,
       rules,
+      score: userData.rating_points,
     };
 
     return new Response(JSON.stringify(response), {
