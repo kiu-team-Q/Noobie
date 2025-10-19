@@ -4,6 +4,7 @@ import { Code2, Shield, Zap, Users, ArrowRight, Upload, MessageSquare } from "lu
 import { Link } from "react-router-dom";
 import { NoobieLogo } from "@/components/NoobieLogo";
 import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
 
 const Home = () => {
   return (
@@ -167,6 +168,8 @@ const Home = () => {
           </div>
         </div>
       </section>
+
+      <Footer />
     </div>
   );
 };

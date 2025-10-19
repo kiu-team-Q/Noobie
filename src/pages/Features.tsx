@@ -1,6 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Code2, Shield, Zap, Upload, MessageSquare, Users } from "lucide-react";
 import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
 
 const Features = () => {
   const features = [
@@ -70,6 +71,8 @@ const Features = () => {
           ))}
         </div>
       </div>
+
+      <Footer />
     </div>
   );
 };

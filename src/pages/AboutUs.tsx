@@ -2,6 +2,7 @@ import { Card } from "@/components/ui/card";
 import { Target, Users, Lightbulb } from "lucide-react";
 import { Header } from "@/components/Header";
 import { NoobieLogo } from "@/components/NoobieLogo";
+import { Footer } from "@/components/Footer";
 
 const AboutUs = () => {
   return (
@@ -69,6 +70,8 @@ const AboutUs = () => {
           </Card>
         </div>
       </div>
+
+      <Footer />
     </div>
   );
 };
