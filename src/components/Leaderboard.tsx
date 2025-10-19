@@ -51,8 +51,8 @@ export const Leaderboard = ({
         </div>
       </Card>;
   }
-  return <Card className="border-border/50 bg-card shadow-sm animate-fade-in h-[305px] flex flex-col">
-      <div className="p-6 pb-3">
+  return <Card className="border-border/50 bg-card shadow-sm animate-fade-in h-[285px] flex flex-col">
+      <div className="p-6 pb-2">
         <div className="flex items-center gap-2">
           <div className="p-1.5 rounded-md bg-primary/10">
             <Trophy className="h-4 w-4 text-primary" />
@@ -62,23 +62,23 @@ export const Leaderboard = ({
       </div>
       
       <ScrollArea className="flex-1 px-6 pb-6">
-        <div className="space-y-1.5">
+        <div className="space-y-1">
           {leaderboard.length === 0 ? <p className="text-sm text-muted-foreground text-center py-4">
               No other interns in this position yet
-            </p> : leaderboard.map((entry, index) => <div key={entry.id} className={`flex items-center gap-2.5 p-2 rounded-lg transition-colors ${entry.id === currentUserId ? "bg-primary/10 border border-primary/20" : "bg-muted/30 hover:bg-muted/50"}`}>
-                <div className="flex items-center justify-center w-7 h-7 rounded-full bg-background">
+            </p> : leaderboard.map((entry, index) => <div key={entry.id} className={`flex items-center gap-2 p-1.5 rounded-lg transition-colors ${entry.id === currentUserId ? "bg-primary/10 border border-primary/20" : "bg-muted/30 hover:bg-muted/50"}`}>
+                <div className="flex items-center justify-center w-6 h-6 rounded-full bg-background">
                   {getRankIcon(index)}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className={`text-sm font-medium truncate ${entry.id === currentUserId ? "text-primary" : "text-foreground"}`}>
+                  <p className={`text-xs font-medium truncate ${entry.id === currentUserId ? "text-primary" : "text-foreground"}`}>
                     {entry.first_name} {entry.last_name}
                     {entry.id === currentUserId && " (You)"}
                   </p>
-                  <p className="text-xs text-muted-foreground">Rank #{index + 1}</p>
+                  <p className="text-[10px] text-muted-foreground">Rank #{index + 1}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-base font-bold text-primary">{entry.rating_points}</p>
-                  <p className="text-xs text-muted-foreground">points</p>
+                  <p className="text-sm font-bold text-primary">{entry.rating_points}</p>
+                  <p className="text-[10px] text-muted-foreground">points</p>
                 </div>
               </div>)}
         </div>
