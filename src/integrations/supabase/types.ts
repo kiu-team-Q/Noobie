@@ -241,6 +241,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      increment_user_points: {
+        Args: { points_to_add: number; user_id: string }
+        Returns: undefined
+      }
       is_admin: {
         Args: { _user_id: string }
         Returns: boolean

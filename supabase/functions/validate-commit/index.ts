@@ -222,6 +222,16 @@ Analyze the code changes and provide your assessment.`;
       console.error('Error storing submission:', insertError);
     }
 
+    // Update user's rating points
+    const { error: updateError } = await adminClient.rpc('increment_user_points', {
+      user_id: authData.user.id,
+      points_to_add: points
+    });
+
+    if (updateError) {
+      console.error('Error updating user points:', updateError);
+    }
+
     return new Response(
       JSON.stringify({
         category,
