@@ -34,6 +34,7 @@ const CompanyPortal = () => {
   const { user, role, loading, signOut } = useAuth();
   const [profile, setProfile] = useState<any>(null);
   const [positions, setPositions] = useState<any[]>([]);
+  const [interns, setInterns] = useState<any[]>([]);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
@@ -64,6 +65,7 @@ const CompanyPortal = () => {
     if (user && role === 'company') {
       loadProfile();
       loadPositions();
+      loadInterns();
     }
   }, [user, role, loading]);
 
@@ -92,6 +94,24 @@ const CompanyPortal = () => {
 
     if (!error && data) {
       setPositions(data);
+    }
+  };
+
+  const loadInterns = async () => {
+    if (!user) return;
+
+    const { data, error } = await supabase
+      .from("users")
+      .select(`
+        *,
+        user_roles!inner(role),
+        positions(name)
+      `)
+      .eq("company_id", user.id)
+      .eq("user_roles.role", "intern");
+
+    if (!error && data) {
+      setInterns(data);
     }
   };
 
@@ -397,6 +417,52 @@ const CompanyPortal = () => {
                           Generate Invite
                         </Button>
                       </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </Card>
+
+        <Card className="border-border bg-card p-6">
+          <div className="flex items-center gap-3 mb-6">
+            <User className="h-6 w-6 text-primary" />
+            <h2 className="text-2xl font-semibold text-card-foreground">Interns</h2>
+          </div>
+
+          {interns.length === 0 ? (
+            <div className="text-center py-8 text-muted-foreground">
+              No interns have joined yet. Share invite links to get started.
+            </div>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Email</TableHead>
+                  <TableHead>Position</TableHead>
+                  <TableHead className="text-right">Rating Points</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {interns.map((intern) => (
+                  <TableRow key={intern.id}>
+                    <TableCell className="font-medium">
+                      {intern.first_name} {intern.last_name}
+                    </TableCell>
+                    <TableCell className="text-muted-foreground">
+                      {intern.email}
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant="outline">
+                        {intern.positions?.name || 'No position'}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <Badge className="bg-primary/10 text-primary border-primary/20">
+                        {intern.rating_points} pts
+                      </Badge>
                     </TableCell>
                   </TableRow>
                 ))}
