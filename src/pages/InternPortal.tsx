@@ -90,98 +90,77 @@ const InternPortal = () => {
         </div>
       </div>
 
-      <div className="container mx-auto px-6 py-8 space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-fade-in">
-          <Card className="border-border/50 bg-gradient-to-br from-primary/5 via-card to-card shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-            <div className="p-6">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 rounded-lg bg-primary/10">
-                  <Award className="h-6 w-6 text-primary" />
+      <div className="container mx-auto px-6 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Left Column - Profile & Guidelines */}
+          <div className="space-y-6">
+            {/* Compact Profile Card */}
+            <Card className="border-border/50 bg-gradient-to-br from-card to-muted/20 shadow-lg animate-fade-in">
+              <div className="p-6">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary/60">
+                    <User className="h-6 w-6 text-primary-foreground" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h2 className="text-xl font-bold text-card-foreground truncate">
+                      {profile?.first_name} {profile?.last_name}
+                    </h2>
+                    <p className="text-sm text-muted-foreground truncate">{profile?.email}</p>
+                  </div>
                 </div>
-                <h3 className="font-semibold text-lg">Rating Points</h3>
-              </div>
-              <p className="text-5xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-                {profile?.rating_points || 100}
-              </p>
-              <p className="text-xs text-muted-foreground mt-2">Keep up the great work!</p>
-            </div>
-          </Card>
 
-          <Card className="border-border/50 bg-gradient-to-br from-accent/5 via-card to-card shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-            <div className="p-6">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 rounded-lg bg-accent/10">
-                  <Briefcase className="h-6 w-6 text-accent-foreground" />
+                {/* Stats Grid */}
+                <div className="grid grid-cols-3 gap-3 mt-4">
+                  <div className="text-center p-3 rounded-lg bg-primary/5">
+                    <Award className="h-5 w-5 text-primary mx-auto mb-1" />
+                    <p className="text-2xl font-bold text-primary">{profile?.rating_points || 100}</p>
+                    <p className="text-xs text-muted-foreground">Points</p>
+                  </div>
+                  <div className="text-center p-3 rounded-lg bg-accent/5">
+                    <Briefcase className="h-5 w-5 text-accent-foreground mx-auto mb-1" />
+                    <p className="text-sm font-semibold text-card-foreground truncate">
+                      {positionData?.name || "None"}
+                    </p>
+                    <p className="text-xs text-muted-foreground">Position</p>
+                  </div>
+                  <div className="text-center p-3 rounded-lg bg-secondary/5">
+                    <Building2 className="h-5 w-5 text-secondary-foreground mx-auto mb-1" />
+                    <p className="text-sm font-semibold text-card-foreground truncate">
+                      {companyData?.first_name || "None"}
+                    </p>
+                    <p className="text-xs text-muted-foreground">Company</p>
+                  </div>
                 </div>
-                <h3 className="font-semibold text-lg">Position</h3>
               </div>
-              <p className="text-2xl font-bold text-card-foreground">
-                {positionData?.name || "Not assigned"}
-              </p>
-              <p className="text-xs text-muted-foreground mt-2">Your current role</p>
-            </div>
-          </Card>
+            </Card>
 
-          <Card className="border-border/50 bg-gradient-to-br from-secondary/5 via-card to-card shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-            <div className="p-6">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 rounded-lg bg-secondary/10">
-                  <Building2 className="h-6 w-6 text-secondary-foreground" />
-                </div>
-                <h3 className="font-semibold text-lg">Company</h3>
-              </div>
-              <p className="text-2xl font-bold text-card-foreground">
-                {companyData ? `${companyData.first_name} ${companyData.last_name}` : "Not assigned"}
-              </p>
-              <p className="text-xs text-muted-foreground mt-2">Your organization</p>
-            </div>
-          </Card>
-        </div>
-
-        <Card className="border-border/50 bg-gradient-to-br from-card to-muted/20 shadow-lg animate-fade-in" style={{ animationDelay: '100ms' }}>
-          <div className="p-8">
-            <div className="flex items-center gap-4 mb-6">
-              <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-primary/60 shadow-lg">
-                <User className="h-10 w-10 text-primary-foreground" />
-              </div>
-              <div>
-                <h2 className="text-3xl font-bold text-card-foreground">
-                  {profile?.first_name} {profile?.last_name}
-                </h2>
-                <p className="text-muted-foreground flex items-center gap-2 mt-1">
-                  <span className="inline-block w-2 h-2 rounded-full bg-green-500"></span>
-                  {profile?.email}
-                </p>
-              </div>
-            </div>
-          </div>
-        </Card>
-
-        {positionData?.rules && (
-          <Card className="border-border/50 bg-gradient-to-br from-card to-muted/20 shadow-lg animate-fade-in" style={{ animationDelay: '200ms' }}>
-            <div className="p-8">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="p-2 rounded-lg bg-primary/10">
-                  <Briefcase className="h-6 w-6 text-primary" />
-                </div>
-                <h3 className="text-2xl font-bold text-card-foreground">Company Guidelines</h3>
-              </div>
-              <div className="prose prose-sm dark:prose-invert max-w-none">
-                <div className="bg-muted/30 p-6 rounded-xl border border-border/50">
-                  <pre className="whitespace-pre-wrap text-sm font-mono text-foreground/90 leading-relaxed">
+            {/* Company Guidelines */}
+            {positionData?.rules && (
+              <Card className="border-border/50 bg-gradient-to-br from-card to-muted/20 shadow-lg animate-fade-in flex-1" style={{ animationDelay: '100ms' }}>
+                <div className="p-6">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="p-2 rounded-lg bg-primary/10">
+                      <Briefcase className="h-5 w-5 text-primary" />
+                    </div>
+                    <h3 className="text-xl font-bold text-card-foreground">Company Guidelines</h3>
+                  </div>
+                  <div className="bg-muted/30 p-4 rounded-lg border border-border/50 max-h-[600px] overflow-y-auto">
+                    <pre className="whitespace-pre-wrap text-sm font-mono text-foreground/90 leading-relaxed">
 {positionData.rules}
-                  </pre>
+                    </pre>
+                  </div>
                 </div>
-              </div>
-            </div>
-          </Card>
-        )}
-
-        {positionData?.rules && (
-          <div className="animate-fade-in" style={{ animationDelay: '300ms' }}>
-            <CodeEditor rules={positionData.rules} />
+              </Card>
+            )}
           </div>
-        )}
+
+          {/* Right Column - Code Editor */}
+          {positionData?.rules && (
+            <div className="animate-fade-in lg:sticky lg:top-8 lg:self-start" style={{ animationDelay: '200ms' }}>
+              <CodeEditor rules={positionData.rules} />
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
