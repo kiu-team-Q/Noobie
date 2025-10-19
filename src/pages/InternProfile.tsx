@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { Leaderboard } from "@/components/Leaderboard";
 import {
   Table,
   TableBody,
@@ -115,57 +116,71 @@ const InternProfile = () => {
       </div>
 
       <div className="container mx-auto px-6 py-8 space-y-6">
-        {/* Profile Card */}
-        <Card className="border-border/50 bg-card shadow-sm animate-fade-in">
-          <div className="p-6 space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary/70 shadow-sm">
-                <User className="h-5 w-5 text-primary-foreground" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <h2 className="text-lg font-semibold text-card-foreground">
-                  {profile?.first_name} {profile?.last_name}
-                </h2>
-                <p className="text-sm text-muted-foreground truncate">{profile?.email}</p>
-              </div>
-            </div>
-
-            <div className="border-t border-border/50"></div>
-
-            {companyData && (
-              <div className="flex items-center gap-3 p-3 rounded-lg bg-blue-500/10 border border-blue-500/20">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-500/20">
-                  <Building2 className="h-5 w-5 text-white" />
+        {/* Top Section - Profile & Leaderboard */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Profile Card */}
+          <Card className="border-border/50 bg-card shadow-sm animate-fade-in">
+            <div className="p-6 space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary/70 shadow-sm">
+                  <User className="h-5 w-5 text-primary-foreground" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs font-medium text-white uppercase tracking-wide">Company</p>
-                  <p className="text-sm font-semibold text-white truncate">
-                    {companyData.first_name} {companyData.last_name}
+                  <h2 className="text-lg font-semibold text-card-foreground">
+                    {profile?.first_name} {profile?.last_name}
+                  </h2>
+                  <p className="text-sm text-muted-foreground truncate">{profile?.email}</p>
+                </div>
+              </div>
+
+              <div className="border-t border-border/50"></div>
+
+              {companyData && (
+                <div className="flex items-center gap-3 p-3 rounded-lg bg-blue-500/10 border border-blue-500/20">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-500/20">
+                    <Building2 className="h-5 w-5 text-white" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-medium text-white uppercase tracking-wide">Company</p>
+                    <p className="text-sm font-semibold text-white truncate">
+                      {companyData.first_name} {companyData.last_name}
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="p-3 rounded-lg bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Award className="h-4 w-4 text-primary" />
+                    <p className="text-xs font-medium text-muted-foreground">Rating</p>
+                  </div>
+                  <p className="text-2xl font-bold text-primary">{profile?.rating_points || 100}</p>
+                </div>
+                <div className="p-3 rounded-lg bg-gradient-to-br from-accent/10 to-accent/5 border border-accent/20">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Briefcase className="h-4 w-4 text-accent-foreground" />
+                    <p className="text-xs font-medium text-muted-foreground">Position</p>
+                  </div>
+                  <p className="text-sm font-semibold text-card-foreground truncate">
+                    {positionData?.name || "Not assigned"}
                   </p>
                 </div>
               </div>
-            )}
-
-            <div className="grid grid-cols-2 gap-3">
-              <div className="p-3 rounded-lg bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20">
-                <div className="flex items-center gap-2 mb-1">
-                  <Award className="h-4 w-4 text-primary" />
-                  <p className="text-xs font-medium text-muted-foreground">Rating</p>
-                </div>
-                <p className="text-2xl font-bold text-primary">{profile?.rating_points || 100}</p>
-              </div>
-              <div className="p-3 rounded-lg bg-gradient-to-br from-accent/10 to-accent/5 border border-accent/20">
-                <div className="flex items-center gap-2 mb-1">
-                  <Briefcase className="h-4 w-4 text-accent-foreground" />
-                  <p className="text-xs font-medium text-muted-foreground">Position</p>
-                </div>
-                <p className="text-sm font-semibold text-card-foreground truncate">
-                  {positionData?.name || "Not assigned"}
-                </p>
-              </div>
             </div>
-          </div>
-        </Card>
+          </Card>
+
+          {/* Leaderboard */}
+          {profile?.company_id && profile?.position_id && user && (
+            <div className="animate-fade-in" style={{ animationDelay: '100ms' }}>
+              <Leaderboard 
+                companyId={profile.company_id}
+                positionId={profile.position_id}
+                currentUserId={user.id}
+              />
+            </div>
+          )}
+        </div>
 
         {/* Guidelines */}
         {positionData?.rules && (
