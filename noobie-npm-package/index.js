@@ -1,13 +1,8 @@
 #!/usr/bin/env node
 
 import { execSync } from 'child_process';
-import { promisify } from 'util';
 import fetch from 'node-fetch';
 import https from 'https';
-import { userInfo } from 'os';
-
-// Promisify the exec function for async/await usage
-const execPromise = promisify(execSync);
 
 
 
