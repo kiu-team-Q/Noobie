@@ -34,6 +34,7 @@ const CompanyPortal = () => {
   const [positions, setPositions] = useState<any[]>([]);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
   const [isInviteOpen, setIsInviteOpen] = useState(false);
   const [selectedPosition, setSelectedPosition] = useState<string>("");
   const [inviteUrl, setInviteUrl] = useState("");
@@ -45,6 +46,11 @@ const CompanyPortal = () => {
     id: "",
     name: "",
     rules: "",
+  });
+  const [editProfile, setEditProfile] = useState({
+    first_name: "",
+    last_name: "",
+    email: "",
   });
 
   useEffect(() => {
@@ -156,6 +162,47 @@ const CompanyPortal = () => {
     setIsEditOpen(true);
   };
 
+  const handleEditProfile = async () => {
+    if (!user || !editProfile.first_name.trim() || !editProfile.last_name.trim()) return;
+
+    const { error } = await supabase
+      .from("users")
+      .update({
+        first_name: editProfile.first_name,
+        last_name: editProfile.last_name,
+        email: editProfile.email,
+      })
+      .eq("id", user.id);
+
+    if (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update profile",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    toast({
+      title: "Success",
+      description: "Profile updated successfully",
+    });
+
+    setIsEditProfileOpen(false);
+    loadProfile();
+  };
+
+  const openEditProfileDialog = () => {
+    if (profile) {
+      setEditProfile({
+        first_name: profile.first_name || "",
+        last_name: profile.last_name || "",
+        email: profile.email || "",
+      });
+      setIsEditProfileOpen(true);
+    }
+  };
+
   const handleGenerateInvite = async (positionId: string) => {
     if (!user) return;
 
@@ -227,12 +274,15 @@ const CompanyPortal = () => {
             <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-primary/10">
               <User className="h-8 w-8 text-primary" />
             </div>
-            <div>
+            <div className="flex-1">
               <h2 className="text-2xl font-semibold text-card-foreground">
                 {profile?.first_name} {profile?.last_name}
               </h2>
               <p className="text-muted-foreground">{profile?.email}</p>
             </div>
+            <Button variant="outline" onClick={openEditProfileDialog}>
+              <Pencil className="h-4 w-4" />
+            </Button>
           </div>
         </Card>
 
@@ -335,6 +385,59 @@ const CompanyPortal = () => {
             </Table>
           )}
         </Card>
+
+        <Dialog open={isEditProfileOpen} onOpenChange={setIsEditProfileOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Edit Company Profile</DialogTitle>
+              <DialogDescription>
+                Update your company information.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="profile-first-name">First Name</Label>
+                <Input
+                  id="profile-first-name"
+                  value={editProfile.first_name}
+                  onChange={(e) =>
+                    setEditProfile({ ...editProfile, first_name: e.target.value })
+                  }
+                  placeholder="First name"
+                />
+              </div>
+              <div>
+                <Label htmlFor="profile-last-name">Last Name</Label>
+                <Input
+                  id="profile-last-name"
+                  value={editProfile.last_name}
+                  onChange={(e) =>
+                    setEditProfile({ ...editProfile, last_name: e.target.value })
+                  }
+                  placeholder="Last name"
+                />
+              </div>
+              <div>
+                <Label htmlFor="profile-email">Email</Label>
+                <Input
+                  id="profile-email"
+                  type="email"
+                  value={editProfile.email}
+                  onChange={(e) =>
+                    setEditProfile({ ...editProfile, email: e.target.value })
+                  }
+                  placeholder="email@company.com"
+                />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setIsEditProfileOpen(false)}>
+                Cancel
+              </Button>
+              <Button onClick={handleEditProfile}>Save Changes</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
 
         <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
           <DialogContent>
