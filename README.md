@@ -19,6 +19,8 @@ Existing AI assistants (like Copilot or ChatGPT) are generic — they don’t te
 Noobie is an AI-powered coding mentor built specifically for new hires.
 It helps them learn, train, and adapt to the company’s coding standards — through personalized feedback, score tracking, and realistic training.
 
+Hosted here ->  https://noobie.lovable.app/
+
 Noobie allows companies to:
 
 Upload internal coding and policy rules
