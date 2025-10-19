@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { CenteredHeader } from "@/components/CenteredHeader";
 import {
   Dialog,
   DialogContent,
@@ -250,7 +249,6 @@ const CompanyPortal = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <CenteredHeader />
       <div className="border-b border-border">
         <div className="container mx-auto px-6 py-6">
           <div className="flex items-center justify-between">
