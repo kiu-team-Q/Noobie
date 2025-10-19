@@ -21,13 +21,18 @@ serve(async (req) => {
       });
     }
 
-    // Create Supabase client with service role to bypass RLS
+    // Create two Supabase clients:
+    // 1. Auth client for authentication
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-    const supabase = createClient(supabaseUrl, supabaseKey);
+    const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+    const supabaseAuthClient = createClient(supabaseUrl, supabaseAnonKey);
+    
+    // 2. Admin client for database operations (bypasses RLS)
+    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
 
     // Authenticate user
-    const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+    const { data: authData, error: authError } = await supabaseAuthClient.auth.signInWithPassword({
       email,
       password,
     });
@@ -41,8 +46,8 @@ serve(async (req) => {
 
     const userId = authData.user.id;
 
-    // Fetch user data
-    const { data: userData, error: userError } = await supabase
+    // Fetch user data using admin client to bypass RLS
+    const { data: userData, error: userError } = await supabaseAdmin
       .from("users")
       .select("first_name, last_name, company_id, position_id")
       .eq("id", userId)
@@ -55,11 +60,11 @@ serve(async (req) => {
       });
     }
 
-    // Fetch position data (contains rules)
+    // Fetch position data (contains rules) using admin client
     let position = null;
     let rules = null;
     if (userData.position_id) {
-      const { data: positionData } = await supabase
+      const { data: positionData } = await supabaseAdmin
         .from("positions")
         .select("name, rules")
         .eq("id", userData.position_id)
@@ -69,11 +74,11 @@ serve(async (req) => {
       rules = positionData?.rules || null;
     }
 
-    // Fetch company data
+    // Fetch company data using admin client to bypass RLS
     let company = null;
     if (userData.company_id) {
       console.log("Fetching company with ID:", userData.company_id);
-      const { data: companyData, error: companyError } = await supabase
+      const { data: companyData, error: companyError } = await supabaseAdmin
         .from("users")
         .select("first_name, last_name")
         .eq("id", userData.company_id)
