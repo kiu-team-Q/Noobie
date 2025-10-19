@@ -204,9 +204,10 @@ Analyze the code changes and provide your assessment.`;
 
     const allowCommit = category !== 'C';
 
-    // Store submission in database
-    const points = Math.max(0, Math.round(percentageScore));
-    const submissionFeedback = `Category: ${category} | Score: ${Math.round(percentageScore * 10) / 10}%\n\n${parsed.feedback}\n\n${parsed.issues ? `Issues:\n${parsed.issues}` : ''}`;
+    // Store submission in database - use raw score for points
+    const rawScore = excellentScore + okScore + badScore;
+    const points = Math.round(rawScore);
+    const submissionFeedback = `Category: ${category} | Score: ${Math.round(percentageScore * 10) / 10}% | Points: ${points}\n\n${parsed.feedback}\n\n${parsed.issues ? `Issues:\n${parsed.issues}` : ''}`;
     
     const { error: insertError } = await adminClient
       .from('code_submissions')
@@ -222,7 +223,7 @@ Analyze the code changes and provide your assessment.`;
       console.error('Error storing submission:', insertError);
     }
 
-    // Update user's rating points
+    // Update user's rating points (can be negative for bad code)
     const { error: updateError } = await adminClient.rpc('increment_user_points', {
       user_id: authData.user.id,
       points_to_add: points
