@@ -67,20 +67,20 @@ export const NoobieLogo = ({ className = "", textSize = "text-5xl" }: NooglesLog
         }}
       >
         {/* Eye white */}
-        <div className="absolute inset-0 rounded-full bg-background border-4 border-primary" />
+        <div className="absolute inset-0 rounded-full bg-primary border-4 border-background" />
         
         {/* Iris */}
         <div className="absolute inset-0 flex items-center justify-center">
           <div
-            className="w-[60%] h-[60%] rounded-full bg-primary/80 flex items-center justify-center transition-transform duration-100 ease-out"
+            className="w-[60%] h-[60%] rounded-full bg-background/30 flex items-center justify-center transition-transform duration-100 ease-out"
             style={{
               transform: `translate(${leftPupil.x}px, ${leftPupil.y}px)`,
             }}
           >
             {/* Pupil */}
-            <div className="w-[45%] h-[45%] rounded-full bg-foreground" />
+            <div className="w-[45%] h-[45%] rounded-full bg-background" />
             {/* Light reflection */}
-            <div className="absolute top-[20%] left-[30%] w-[25%] h-[25%] rounded-full bg-background/60" />
+            <div className="absolute top-[20%] left-[30%] w-[25%] h-[25%] rounded-full bg-primary/40" />
           </div>
         </div>
       </div>
@@ -96,20 +96,20 @@ export const NoobieLogo = ({ className = "", textSize = "text-5xl" }: NooglesLog
         }}
       >
         {/* Eye white */}
-        <div className="absolute inset-0 rounded-full bg-background border-4 border-primary" />
+        <div className="absolute inset-0 rounded-full bg-primary border-4 border-background" />
         
         {/* Iris */}
         <div className="absolute inset-0 flex items-center justify-center">
           <div
-            className="w-[60%] h-[60%] rounded-full bg-primary/80 flex items-center justify-center transition-transform duration-100 ease-out"
+            className="w-[60%] h-[60%] rounded-full bg-background/30 flex items-center justify-center transition-transform duration-100 ease-out"
             style={{
               transform: `translate(${rightPupil.x}px, ${rightPupil.y}px)`,
             }}
           >
             {/* Pupil */}
-            <div className="w-[45%] h-[45%] rounded-full bg-foreground" />
+            <div className="w-[45%] h-[45%] rounded-full bg-background" />
             {/* Light reflection */}
-            <div className="absolute top-[20%] left-[30%] w-[25%] h-[25%] rounded-full bg-background/60" />
+            <div className="absolute top-[20%] left-[30%] w-[25%] h-[25%] rounded-full bg-primary/40" />
           </div>
         </div>
       </div>
