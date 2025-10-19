@@ -236,7 +236,7 @@ const InternProfile = () => {
                         </TableCell>
                         <TableCell className="text-right flex items-center justify-end gap-2">
                           <Badge className="bg-primary/10 text-primary border-primary/20">
-                            +{submission.points_awarded} pts
+                            {submission.points_awarded >= 0 ? '+' : ''}{submission.points_awarded} pts
                           </Badge>
                           {submission.feedback && (expandedSubmission === submission.id ? <ChevronUp className="h-4 w-4 text-muted-foreground" /> : <ChevronDown className="h-4 w-4 text-muted-foreground" />)}
                         </TableCell>
