@@ -64,38 +64,22 @@ const InternCodePortal = () => {
 
       const feedback = aiData.feedback;
 
-      // Insert submission with feedback
+      // Insert submission with feedback (no points)
       const { error: insertError } = await supabase
         .from("code_submissions")
         .insert({
           intern_id: user.id,
           code: code,
           feedback: feedback,
-          points_awarded: 10,
+          points_awarded: 0,
           status: 'submitted'
         });
 
       if (insertError) throw insertError;
 
-      // Update user's rating
-      const { data: currentUser } = await supabase
-        .from("users")
-        .select("rating_points")
-        .eq("id", user.id)
-        .single();
-
-      if (currentUser) {
-        const { error: updateError } = await supabase
-          .from("users")
-          .update({ rating_points: (currentUser.rating_points || 100) + 10 })
-          .eq("id", user.id);
-
-        if (updateError) throw updateError;
-      }
-
       toast({
         title: "Code Submitted!",
-        description: "Your code has been reviewed and submitted. +10 points!",
+        description: "Your code has been reviewed and submitted.",
       });
 
       // Return feedback to display
