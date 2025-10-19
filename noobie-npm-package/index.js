@@ -15,21 +15,34 @@ const execPromise = promisify(execSync);
 async function main() {
     console.log("🚀 Running AI Commit Review with Lovable❤️ AI...");
 
-    const { createInterface } = await import('readline');
-    const rl = createInterface({
-        input: process.stdin,
-        output: process.stdout
-    });
+    // Get email and password from env vars or prompt
+    let email = process.env.NOOBIE_EMAIL;
+    let password = process.env.NOOBIE_PASSWORD;
+    let rl;
 
-    const email = await new Promise((resolve) => {
-        rl.question('Enter your email: ', resolve);
-    });
+    if (!email || !password) {
+        const { createInterface } = await import('readline');
+        rl = createInterface({
+            input: process.stdin,
+            output: process.stdout
+        });
+    }
 
-    const password = await new Promise((resolve) => {
-        rl.question('Enter your password: ', resolve);
-    });
+    if (!email) {
+        email = await new Promise((resolve) => {
+            rl.question('Enter your email: ', resolve);
+        });
+    }
 
-    rl.close();
+    if (!password) {
+        password = await new Promise((resolve) => {
+            rl.question('Enter your password: ', resolve);
+        });
+    }
+
+    if (rl) {
+        rl.close();
+    }
 
     try {
         const response = await fetch('https://ffbfzqeblmokusdfbppr.supabase.co/functions/v1/get-user-rules', {
