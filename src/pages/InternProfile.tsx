@@ -7,93 +7,77 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Leaderboard } from "@/components/Leaderboard";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-
 const InternProfile = () => {
-  const { toast } = useToast();
-  const { user, role, loading, signOut } = useAuth();
+  const {
+    toast
+  } = useToast();
+  const {
+    user,
+    role,
+    loading,
+    signOut
+  } = useAuth();
   const [profile, setProfile] = useState<any>(null);
   const [positionData, setPositionData] = useState<any>(null);
   const [companyData, setCompanyData] = useState<any>(null);
   const [submissions, setSubmissions] = useState<any[]>([]);
   const [expandedSubmission, setExpandedSubmission] = useState<string | null>(null);
-
   useEffect(() => {
     if (!loading && (!user || role !== 'intern')) {
       window.location.href = "/auth";
       return;
     }
-    
     if (user && role === 'intern') {
       loadProfile();
       loadSubmissions();
     }
   }, [user, role, loading]);
-
   const loadProfile = async () => {
     if (!user) return;
-    
-    const { data, error } = await supabase
-      .from("users")
-      .select("*")
-      .eq("id", user.id)
-      .single();
-
+    const {
+      data,
+      error
+    } = await supabase.from("users").select("*").eq("id", user.id).single();
     if (!error && data) {
       setProfile(data);
-      
       if (data.position_id) {
-        const { data: position } = await supabase
-          .from("positions")
-          .select("id, name, rules, company_id")
-          .eq("id", data.position_id)
-          .single();
-        
+        const {
+          data: position
+        } = await supabase.from("positions").select("id, name, rules, company_id").eq("id", data.position_id).single();
         if (position) {
           setPositionData(position);
         }
       }
-      
       if (user) {
-        const { data: companyInfo } = await supabase
-          .rpc("get_intern_company_info", { _user_id: user.id });
-        
+        const {
+          data: companyInfo
+        } = await supabase.rpc("get_intern_company_info", {
+          _user_id: user.id
+        });
         if (companyInfo && companyInfo.length > 0) {
           setCompanyData(companyInfo[0]);
         }
       }
     }
   };
-
   const loadSubmissions = async () => {
     if (!user) return;
-
-    const { data, error } = await supabase
-      .from("code_submissions")
-      .select("*")
-      .eq("intern_id", user.id)
-      .order("submitted_at", { ascending: false })
-      .limit(10);
-
+    const {
+      data,
+      error
+    } = await supabase.from("code_submissions").select("*").eq("intern_id", user.id).order("submitted_at", {
+      ascending: false
+    }).limit(10);
     if (!error && data) {
       setSubmissions(data);
     }
   };
-
   if (loading) {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   }
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+  return <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
       <div className="border-b border-border/40 backdrop-blur-sm bg-background/80">
         <div className="container mx-auto px-6 py-6">
           <div className="flex items-center justify-between">
@@ -135,8 +119,7 @@ const InternProfile = () => {
 
               <div className="border-t border-border/50"></div>
 
-              {companyData && (
-                <div className="flex items-center gap-3 p-3 rounded-lg bg-blue-500/10 border border-blue-500/20">
+              {companyData && <div className="flex items-center gap-3 p-3 rounded-lg bg-blue-500/10 border border-blue-500/20">
                   <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-500/20">
                     <Building2 className="h-5 w-5 text-white" />
                   </div>
@@ -146,8 +129,7 @@ const InternProfile = () => {
                       {companyData.first_name} {companyData.last_name}
                     </p>
                   </div>
-                </div>
-              )}
+                </div>}
 
               <div className="grid grid-cols-2 gap-3">
                 <div className="p-3 rounded-lg bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20">
@@ -171,20 +153,17 @@ const InternProfile = () => {
           </Card>
 
           {/* Leaderboard */}
-          {profile?.company_id && profile?.position_id && user && (
-            <div className="animate-fade-in" style={{ animationDelay: '100ms' }}>
-              <Leaderboard 
-                companyId={profile.company_id}
-                positionId={profile.position_id}
-                currentUserId={user.id}
-              />
-            </div>
-          )}
+          {profile?.company_id && profile?.position_id && user && <div className="animate-fade-in" style={{
+          animationDelay: '100ms'
+        }}>
+              <Leaderboard companyId={profile.company_id} positionId={profile.position_id} currentUserId={user.id} />
+            </div>}
         </div>
 
         {/* Guidelines */}
-        {positionData?.rules && (
-          <Card className="border-border/50 bg-card shadow-sm animate-fade-in" style={{ animationDelay: '100ms' }}>
+        {positionData?.rules && <Card className="border-border/50 bg-card shadow-sm animate-fade-in" style={{
+        animationDelay: '100ms'
+      }}>
             <div className="p-6">
               <div className="flex items-center gap-2 mb-4">
                 <div className="p-1.5 rounded-md bg-primary/10">
@@ -194,15 +173,16 @@ const InternProfile = () => {
               </div>
               <div className="bg-muted/30 p-4 rounded-lg border border-border/50 max-h-[300px] overflow-y-auto">
                 <pre className="whitespace-pre-wrap text-sm font-mono text-foreground/90 leading-relaxed">
-{positionData.rules}
+              {positionData.rules}
                 </pre>
               </div>
             </div>
-          </Card>
-        )}
+          </Card>}
 
         {/* Submission History */}
-        <Card className="border-border/50 bg-card shadow-sm animate-fade-in" style={{ animationDelay: '200ms' }}>
+        <Card className="border-border/50 bg-card shadow-sm animate-fade-in" style={{
+        animationDelay: '200ms'
+      }}>
           <div className="p-6">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
@@ -219,16 +199,13 @@ const InternProfile = () => {
               </Link>
             </div>
 
-            {submissions.length === 0 ? (
-              <div className="text-center py-8">
+            {submissions.length === 0 ? <div className="text-center py-8">
                 <Code className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
                 <p className="text-muted-foreground mb-4">No submissions yet</p>
                 <Link to="/intern/portal">
-                  <Button>Start Coding</Button>
+                  
                 </Link>
-              </div>
-            ) : (
-              <Table>
+              </div> : <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead>Submitted</TableHead>
@@ -237,13 +214,8 @@ const InternProfile = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {submissions.map((submission) => (
-                    <>
-                      <TableRow 
-                        key={submission.id}
-                        className={submission.feedback ? "cursor-pointer hover:bg-muted/50" : ""}
-                        onClick={() => submission.feedback && setExpandedSubmission(expandedSubmission === submission.id ? null : submission.id)}
-                      >
+                  {submissions.map(submission => <>
+                      <TableRow key={submission.id} className={submission.feedback ? "cursor-pointer hover:bg-muted/50" : ""} onClick={() => submission.feedback && setExpandedSubmission(expandedSubmission === submission.id ? null : submission.id)}>
                         <TableCell className="flex items-center gap-2">
                           <Calendar className="h-4 w-4 text-muted-foreground" />
                           {new Date(submission.submitted_at).toLocaleDateString()} {new Date(submission.submitted_at).toLocaleTimeString()}
@@ -255,15 +227,10 @@ const InternProfile = () => {
                           <Badge className="bg-primary/10 text-primary border-primary/20">
                             +{submission.points_awarded} pts
                           </Badge>
-                          {submission.feedback && (
-                            expandedSubmission === submission.id ? 
-                              <ChevronUp className="h-4 w-4 text-muted-foreground" /> : 
-                              <ChevronDown className="h-4 w-4 text-muted-foreground" />
-                          )}
+                          {submission.feedback && (expandedSubmission === submission.id ? <ChevronUp className="h-4 w-4 text-muted-foreground" /> : <ChevronDown className="h-4 w-4 text-muted-foreground" />)}
                         </TableCell>
                       </TableRow>
-                      {expandedSubmission === submission.id && submission.feedback && (
-                        <TableRow>
+                      {expandedSubmission === submission.id && submission.feedback && <TableRow>
                           <TableCell colSpan={3} className="bg-muted/30 border-t">
                             <div className="p-4 space-y-2">
                               <h4 className="font-semibold text-sm flex items-center gap-2">
@@ -273,18 +240,13 @@ const InternProfile = () => {
                               <pre className="text-sm whitespace-pre-wrap text-muted-foreground font-sans leading-relaxed">{submission.feedback}</pre>
                             </div>
                           </TableCell>
-                        </TableRow>
-                      )}
-                    </>
-                  ))}
+                        </TableRow>}
+                    </>)}
                 </TableBody>
-              </Table>
-            )}
+              </Table>}
           </div>
         </Card>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default InternProfile;
