@@ -1,1 +1,13 @@
 project_id = "ffbfzqeblmokusdfbppr"
+
+[functions.check-code]
+verify_jwt = false
+
+[functions.create-invitation]
+verify_jwt = false
+
+[functions.create-company-user]
+verify_jwt = false
+
+[functions.get-user-rules]
+verify_jwt = false
