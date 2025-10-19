@@ -94,7 +94,7 @@ serve(async (req) => {
     // Return formatted response
     const response = {
       name: `${userData.first_name} ${userData.last_name}`,
-      company: `${companyData.first_name} ${companyData.last_name}`,
+      company,
       position,
       rules,
     };
