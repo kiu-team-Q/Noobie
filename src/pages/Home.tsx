@@ -95,9 +95,9 @@ const Home = () => {
             </p>
           </Card>
 
-          <Card className="group border-border bg-card p-6 transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 hover:-translate-y-1">
-            <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 transition-all duration-300 group-hover:scale-110 group-hover:bg-primary/20">
-              <Upload className="h-6 w-6 text-primary transition-transform duration-300 group-hover:rotate-3" />
+          <Card className="group border-border bg-card p-6 transition-all duration-300 hover:border-accent/50 hover:shadow-lg hover:shadow-accent/10 hover:-translate-y-1">
+            <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-accent/10 transition-all duration-300 group-hover:scale-110 group-hover:bg-accent/20">
+              <Upload className="h-6 w-6 text-accent-foreground transition-transform duration-300 group-hover:rotate-3" />
             </div>
             <h3 className="mb-2 text-xl font-semibold text-card-foreground">
               Custom Rule Sets
@@ -108,9 +108,9 @@ const Home = () => {
             </p>
           </Card>
 
-          <Card className="group border-border bg-card p-6 transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 hover:-translate-y-1">
-            <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 transition-all duration-300 group-hover:scale-110 group-hover:bg-primary/20">
-              <MessageSquare className="h-6 w-6 text-primary transition-transform duration-300 group-hover:rotate-3" />
+          <Card className="group border-border bg-card p-6 transition-all duration-300 hover:border-violet-500/50 hover:shadow-lg hover:shadow-violet-500/10 hover:-translate-y-1">
+            <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-violet-500/10 transition-all duration-300 group-hover:scale-110 group-hover:bg-violet-500/20">
+              <MessageSquare className="h-6 w-6 text-violet-500 transition-transform duration-300 group-hover:rotate-3" />
             </div>
             <h3 className="mb-2 text-xl font-semibold text-card-foreground">
               AI Mentorship
@@ -121,9 +121,9 @@ const Home = () => {
             </p>
           </Card>
 
-          <Card className="group border-border bg-card p-6 transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 hover:-translate-y-1">
-            <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 transition-all duration-300 group-hover:scale-110 group-hover:bg-primary/20">
-              <Users className="h-6 w-6 text-primary transition-transform duration-300 group-hover:rotate-3" />
+          <Card className="group border-border bg-card p-6 transition-all duration-300 hover:border-emerald-500/50 hover:shadow-lg hover:shadow-emerald-500/10 hover:-translate-y-1">
+            <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-emerald-500/10 transition-all duration-300 group-hover:scale-110 group-hover:bg-emerald-500/20">
+              <Users className="h-6 w-6 text-emerald-500 transition-transform duration-300 group-hover:rotate-3" />
             </div>
             <h3 className="mb-2 text-xl font-semibold text-card-foreground">
               Secure Invites
