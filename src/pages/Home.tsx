@@ -3,10 +3,12 @@ import { Card } from "@/components/ui/card";
 import { Code2, Shield, Zap, Users, ArrowRight, Upload, MessageSquare } from "lucide-react";
 import { Link } from "react-router-dom";
 import { NoobieLogo } from "@/components/NoobieLogo";
+import { Header } from "@/components/Header";
 
 const Home = () => {
   return (
     <div className="min-h-screen bg-background">
+      <Header />
       {/* Hero Section */}
       <section className="relative overflow-hidden border-b border-border">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-violation-style/10" />
