@@ -91,20 +91,28 @@ export function useAuth() {
   };
 
   const signOut = async () => {
-    // Always attempt to sign out, ignoring errors
-    await supabase.auth.signOut().catch(() => {});
+    try {
+      // Sign out from Supabase
+      await supabase.auth.signOut();
+    } catch (error) {
+      console.error('Sign out error:', error);
+    }
     
-    // Clear local state
+    // Force clear all local state
     setUser(null);
     setSession(null);
     setRole(null);
+    
+    // Clear localStorage manually to ensure complete cleanup
+    localStorage.removeItem('sb-ffbfzqeblmokusdfbppr-auth-token');
     
     toast({
       title: "Signed out",
       description: "You have been signed out successfully.",
     });
     
-    navigate('/');
+    // Force reload to clear any cached state
+    window.location.href = '/';
   };
 
   const redirectToDashboard = useCallback(() => {
