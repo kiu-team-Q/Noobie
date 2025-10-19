@@ -10,35 +10,12 @@ interface CodeEditorProps {
   rules: string;
   onSubmit?: (code: string) => Promise<string | null>;
   isSubmitting?: boolean;
-  onGenerateTasks?: () => Promise<string | null>;
-  isGeneratingTasks?: boolean;
 }
 
-export const CodeEditor = ({ rules, onSubmit, isSubmitting = false, onGenerateTasks, isGeneratingTasks = false }: CodeEditorProps) => {
+export const CodeEditor = ({ rules, onSubmit, isSubmitting = false }: CodeEditorProps) => {
   const { toast } = useToast();
   const [code, setCode] = useState('// Write your code here\n\n');
   const [feedback, setFeedback] = useState<string>("");
-  const [tasks, setTasks] = useState<string>("");
-  const [mode, setMode] = useState<'practice' | 'submit'>('practice');
-
-  const handleGenerateTasks = async () => {
-    if (!onGenerateTasks) return;
-    
-    try {
-      const tasksResult = await onGenerateTasks();
-      if (tasksResult) {
-        setTasks(tasksResult);
-        setMode('practice');
-      }
-    } catch (error: any) {
-      console.error('Error generating tasks:', error);
-      toast({
-        title: "Error",
-        description: "Failed to generate training tasks",
-        variant: "destructive",
-      });
-    }
-  };
 
   const handleSubmitCode = async () => {
     if (!code.trim() || code.trim() === '// Write your code here') {
@@ -102,93 +79,8 @@ export const CodeEditor = ({ rules, onSubmit, isSubmitting = false, onGenerateTa
     return sections;
   };
 
-  const parseTasks = () => {
-    const taskBlocks = tasks.split(/TASK \d+:/);
-    return taskBlocks.filter(block => block.trim()).map(block => {
-      const lines = block.trim().split('\n');
-      const title = lines[0].trim();
-      const content = lines.slice(1).join('\n');
-      return { title, content };
-    });
-  };
-
   return (
     <div className="space-y-6">
-      {/* Mode Toggle */}
-      <div className="flex gap-3">
-        <Button
-          onClick={() => setMode('practice')}
-          variant={mode === 'practice' ? 'default' : 'outline'}
-          className="flex-1"
-        >
-          <Sparkles className="mr-2 h-4 w-4" />
-          Training Mode
-        </Button>
-        <Button
-          onClick={() => setMode('submit')}
-          variant={mode === 'submit' ? 'default' : 'outline'}
-          className="flex-1"
-        >
-          <CheckCircle2 className="mr-2 h-4 w-4" />
-          Submit Mode
-        </Button>
-      </div>
-
-      {/* Training Tasks */}
-      {mode === 'practice' && (
-        <Card className="border-border/50 bg-gradient-to-br from-card to-purple-500/5 shadow-lg">
-          <div className="p-6">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-purple-500/10">
-                  <Sparkles className="h-6 w-6 text-purple-500" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-card-foreground">Training Tasks</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Practice coding with AI-generated tasks based on company guidelines
-                  </p>
-                </div>
-              </div>
-              {onGenerateTasks && (
-                <Button
-                  onClick={handleGenerateTasks}
-                  disabled={isGeneratingTasks}
-                  variant="outline"
-                >
-                  {isGeneratingTasks ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Generating...
-                    </>
-                  ) : (
-                    <>
-                      <Sparkles className="mr-2 h-4 w-4" />
-                      Generate Tasks
-                    </>
-                  )}
-                </Button>
-              )}
-            </div>
-
-            {tasks ? (
-              <div className="space-y-4 mt-6">
-                {parseTasks().map((task, idx) => (
-                  <div key={idx} className="p-4 rounded-lg bg-background/50 border border-border/50">
-                    <h4 className="font-bold text-lg mb-2 text-foreground">Task {idx + 1}: {task.title}</h4>
-                    <div className="text-sm text-muted-foreground whitespace-pre-wrap">{task.content}</div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-8 text-muted-foreground">
-                Click "Generate Tasks" to get AI-powered practice exercises
-              </div>
-            )}
-          </div>
-        </Card>
-      )}
-
       <Card className="border-border/50 bg-gradient-to-br from-card to-muted/20 shadow-lg overflow-hidden">
         <div className="p-6">
           <div className="flex items-center gap-3 mb-4">
@@ -198,9 +90,7 @@ export const CodeEditor = ({ rules, onSubmit, isSubmitting = false, onGenerateTa
             <div>
               <h3 className="text-xl font-bold text-card-foreground">Code Editor</h3>
               <p className="text-sm text-muted-foreground">
-                {mode === 'practice' 
-                  ? 'Practice coding with the training tasks above' 
-                  : 'Test your skills by writing code following the company guidelines'}
+                Test your skills by writing code following the company guidelines
               </p>
             </div>
           </div>
@@ -223,7 +113,7 @@ export const CodeEditor = ({ rules, onSubmit, isSubmitting = false, onGenerateTa
             />
           </div>
 
-          {mode === 'submit' && onSubmit && (
+          {onSubmit && (
             <Button
               onClick={handleSubmitCode}
               disabled={isSubmitting}
@@ -241,14 +131,6 @@ export const CodeEditor = ({ rules, onSubmit, isSubmitting = false, onGenerateTa
                 </>
               )}
             </Button>
-          )}
-          
-          {mode === 'practice' && (
-            <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4 text-center">
-              <p className="text-sm text-blue-500 font-medium">
-                💡 Practice Mode: Write your solution above and switch to Submit Mode when ready
-              </p>
-            </div>
           )}
         </div>
       </Card>
