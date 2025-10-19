@@ -122,28 +122,47 @@ const CompanyPortal = () => {
   const loadInterns = async () => {
     if (!user) return;
 
-    const { data, error } = await supabase
+    // First, get all users with this company_id
+    const { data: usersData, error: usersError } = await supabase
       .from("users")
       .select(`
         *,
-        user_roles(role),
         positions(name)
       `)
       .eq("company_id", user.id);
 
-    console.log('loadInterns response:', { data, error });
-
-    if (error) {
-      console.error('Error loading interns:', error);
+    if (usersError) {
+      console.error('Error loading users:', usersError);
       return;
     }
 
-    // Filter for interns only
-    const internsData = data?.filter((u: any) => 
-      Array.isArray(u.user_roles) && u.user_roles.some((role: any) => role.role === 'intern')
-    ) || [];
+    if (!usersData || usersData.length === 0) {
+      setInterns([]);
+      return;
+    }
+
+    // Get the user IDs
+    const userIds = usersData.map(u => u.id);
+
+    // Fetch roles for these users
+    const { data: rolesData, error: rolesError } = await supabase
+      .from("user_roles")
+      .select("user_id, role")
+      .in("user_id", userIds);
+
+    if (rolesError) {
+      console.error('Error loading roles:', rolesError);
+      return;
+    }
+
+    // Filter for only interns
+    const internUserIds = new Set(
+      rolesData?.filter(r => r.role === 'intern').map(r => r.user_id) || []
+    );
+
+    const internsData = usersData.filter(u => internUserIds.has(u.id));
     
-    console.log('Filtered interns:', internsData);
+    console.log('Loaded interns:', internsData);
     setInterns(internsData);
   };
 
