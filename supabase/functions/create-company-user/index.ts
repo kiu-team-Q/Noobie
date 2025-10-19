@@ -8,10 +8,10 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const { email, password, firstName, lastName, position } = await req.json()
+    const { email, password, companyName } = await req.json()
 
     // Validate required fields
-    if (!email || !password || !firstName || !lastName) {
+    if (!email || !password || !companyName) {
       return new Response(
         JSON.stringify({ error: 'Missing required fields' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -69,9 +69,8 @@ Deno.serve(async (req) => {
       password,
       email_confirm: true,
       user_metadata: {
-        first_name: firstName,
-        last_name: lastName,
-        position: position || null,
+        first_name: companyName,
+        last_name: '',
         role: 'company',
       }
     })

@@ -41,9 +41,7 @@ const AdminDashboard = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    firstName: "",
-    lastName: "",
-    position: "",
+    companyName: "",
   });
 
   useEffect(() => {
@@ -115,9 +113,7 @@ const AdminDashboard = () => {
           body: JSON.stringify({
             email: formData.email,
             password: formData.password,
-            firstName: formData.firstName,
-            lastName: formData.lastName,
-            position: formData.position,
+            companyName: formData.companyName,
           }),
         }
       );
@@ -134,7 +130,7 @@ const AdminDashboard = () => {
       });
 
       setIsDialogOpen(false);
-      setFormData({ email: "", password: "", firstName: "", lastName: "", position: "" });
+      setFormData({ email: "", password: "", companyName: "" });
       loadUsers();
     } catch (error: any) {
       toast({
@@ -228,9 +224,18 @@ const AdminDashboard = () => {
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>Create Company User</DialogTitle>
+                  <DialogTitle>Create Company</DialogTitle>
                 </DialogHeader>
                 <form onSubmit={handleCreateCompany} className="space-y-4">
+                  <div>
+                    <Label htmlFor="companyName">Company Name</Label>
+                    <Input
+                      id="companyName"
+                      required
+                      value={formData.companyName}
+                      onChange={(e) => setFormData({ ...formData, companyName: e.target.value })}
+                    />
+                  </div>
                   <div>
                     <Label htmlFor="email">Email</Label>
                     <Input
@@ -249,32 +254,6 @@ const AdminDashboard = () => {
                       required
                       value={formData.password}
                       onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="firstName">First Name</Label>
-                    <Input
-                      id="firstName"
-                      required
-                      value={formData.firstName}
-                      onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="lastName">Last Name</Label>
-                    <Input
-                      id="lastName"
-                      required
-                      value={formData.lastName}
-                      onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="position">Position</Label>
-                    <Input
-                      id="position"
-                      value={formData.position}
-                      onChange={(e) => setFormData({ ...formData, position: e.target.value })}
                     />
                   </div>
                   <Button type="submit" className="w-full">Create Company</Button>
