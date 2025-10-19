@@ -11,3 +11,6 @@ verify_jwt = false
 
 [functions.get-user-rules]
 verify_jwt = false
+
+[functions.validate-commit]
+verify_jwt = false
