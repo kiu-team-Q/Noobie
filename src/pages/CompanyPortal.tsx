@@ -199,6 +199,8 @@ const CompanyPortal = () => {
   const handleEditPosition = async () => {
     if (!user || !editPosition.name.trim()) return;
 
+    console.log('Updating position:', editPosition.id, editPosition);
+
     const { error } = await supabase
       .from("positions")
       .update({
@@ -208,9 +210,10 @@ const CompanyPortal = () => {
       .eq("id", editPosition.id);
 
     if (error) {
+      console.error('Position update error:', error);
       toast({
         title: "Error",
-        description: "Failed to update position",
+        description: error.message || "Failed to update position",
         variant: "destructive",
       });
       return;
@@ -238,6 +241,8 @@ const CompanyPortal = () => {
   const handleEditProfile = async () => {
     if (!user || !editProfile.first_name.trim() || !editProfile.last_name.trim()) return;
 
+    console.log('Updating profile for user:', user.id, editProfile);
+
     const { error } = await supabase
       .from("users")
       .update({
@@ -248,9 +253,10 @@ const CompanyPortal = () => {
       .eq("id", user.id);
 
     if (error) {
+      console.error('Profile update error:', error);
       toast({
         title: "Error",
-        description: "Failed to update profile",
+        description: error.message || "Failed to update profile",
         variant: "destructive",
       });
       return;
