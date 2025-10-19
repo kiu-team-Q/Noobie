@@ -1,73 +1,133 @@
-# Welcome to your Lovable project
+Project Proposal: Noobie — AI Mentor for New Hires
+1. Problem Statement
 
-## Project info
+When new hires or interns join a company, they often struggle to adapt to internal coding styles, architectural conventions, and security policies.
+Even experienced developers need time to learn how things are done here.
 
-**URL**: https://lovable.dev/projects/3aa82b9e-17d5-4964-98e8-588f7f5cf26d
+This causes:
 
-## How can I edit this code?
+Slower onboarding
 
-There are several ways of editing your application.
+Increased review workload for senior developers
 
-**Use Lovable**
+Inconsistent code quality across teams
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/3aa82b9e-17d5-4964-98e8-588f7f5cf26d) and start prompting.
+Existing AI assistants (like Copilot or ChatGPT) are generic — they don’t teach how to code the company’s way.
 
-Changes made via Lovable will be committed automatically to this repo.
+2. Solution Overview
 
-**Use your preferred IDE**
+Noobie is an AI-powered coding mentor built specifically for new hires.
+It helps them learn, train, and adapt to the company’s coding standards — through personalized feedback, score tracking, and realistic training.
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+Noobie allows companies to:
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+Upload internal coding and policy rules
 
-Follow these steps:
+Generate personalized invite links for interns/new hires
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+Let each new hire train on the web platform and receive AI evaluations + personal adaptation score
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+3. Workflow
+🏢 For Companies
 
-# Step 3: Install the necessary dependencies.
-npm i
+Company contacts Noobie privately and purchases access.
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+Product team creates a company admin account.
 
-**Edit a file directly in GitHub**
+Company admin:
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Uploads rule sets (style, structure, security, etc.)
 
-**Use GitHub Codespaces**
+Adds intern emails
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+Generates personal invite links (with one-time passwords)
 
-## What technologies are used for this project?
+Each intern’s progress can be viewed on a company dashboard (average adaptation scores, training completion rate, etc.)
 
-This project is built with:
+👩‍💻 For Interns
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+Intern receives a unique invite link via email.
 
-## How can I deploy this project?
+Registers → logs into Noobie Web Training Platform.
 
-Simply open [Lovable](https://lovable.dev/projects/3aa82b9e-17d5-4964-98e8-588f7f5cf26d) and click on Share -> Publish.
+Starts training by submitting code examples or completing tasks.
 
-## Can I connect a custom domain to my Lovable project?
+The AI analyzes their code against company rules and gives:
 
-Yes, you can!
+Personalized feedback
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+Adaptation Score (0–100)
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+Suggestions on how to make the code more company-like
+
+Over time, as they improve, their personal score history shows their growth and readiness.
+
+4. Technical Overview
+Layer	Technology	Description
+Frontend	React / Next.js	Web dashboard for companies + training portal for interns
+Backend	Node.js (Express) / FastAPI	Handles rule management, user auth, and AI communication
+AI Model	Gemini / OpenAI API	Analyzes submitted code vs company rule set
+Database	PostgreSQL / MongoDB	Stores companies, rules, users, and training data
+Auth	JWT + One-time invite codes	Secure login for companies and interns
+Scoring Engine	Custom logic + AI	Evaluates accuracy vs rule set and assigns adaptation score
+5. Personalized Scoring System
+
+Each intern’s code submission receives an Adaptation Score based on:
+
+ . Style match (naming, formatting, conventions)
+
+ . Correct use of company libraries/modules
+
+ . Workflow consistency (file structure, imports)
+
+ . Policy adherence (no disallowed patterns)
+
+ . Code clarity and structure
+
+Every intern has:
+
+Score History Graph — tracks improvement over time
+
+AI Feedback Summary — shows what to focus on next
+
+Company Fit Level — “Beginner → Adapting → Company-Like → Ready”
+
+6. Company Dashboard Features
+
+View all interns and their scores
+
+Track training activity and completion
+
+Export adaptation reports
+
+Add/remove rules dynamically
+
+Regenerate new invite links
+
+
+7. Innovation & Value
+
+ Personalized AI mentorship — each intern gets their own adaptive score and growth plan
+ Company-awareness — rules and policies are unique to each company
+ Faster onboarding — new hires learn standards before they touch real code
+ Measurable progress — companies can quantify readiness before assigning real tasks
+ Easy to adopt — no need to integrate with production; training happens safely on the web
+
+8. Future Potential
+
+In the long term, Noobie can:
+
+Integrate into IDEs for live review
+
+Add gamified learning (badges, levels, leaderboards)
+
+Support multiple roles per company (e.g., React, Django, QA)
+
+Export intern performance reports for HR evaluation
+
+Connect to company GitHub for real-time adaptation scoring
+
+9. Summary
+
+Noobie = The private AI mentor for new hires.
+It’s where new developers learn how to think and code like the company — before they ever make a commit.
