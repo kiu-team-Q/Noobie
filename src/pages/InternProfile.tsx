@@ -221,7 +221,18 @@ const InternProfile = () => {
                           {new Date(submission.submitted_at).toLocaleDateString()} {new Date(submission.submitted_at).toLocaleTimeString()}
                         </TableCell>
                         <TableCell>
-                          <Badge variant="outline">{submission.status}</Badge>
+                          <Badge 
+                            variant="outline" 
+                            className={
+                              submission.status === 'approved' 
+                                ? 'bg-green-500/10 text-green-700 border-green-500/20 dark:text-green-400' 
+                                : submission.status === 'rejected'
+                                ? 'bg-red-500/10 text-red-700 border-red-500/20 dark:text-red-400'
+                                : ''
+                            }
+                          >
+                            {submission.status.charAt(0).toUpperCase() + submission.status.slice(1)}
+                          </Badge>
                         </TableCell>
                         <TableCell className="text-right flex items-center justify-end gap-2">
                           <Badge className="bg-primary/10 text-primary border-primary/20">
