@@ -12,7 +12,7 @@ export const Header = () => {
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           <Link to="/">
-            <NoobieLogo textSize="text-2xl" />
+            <NoobieLogo textSize="text-2xl" enableTracking={false} />
           </Link>
           
           <nav className="hidden md:flex items-center gap-8">
