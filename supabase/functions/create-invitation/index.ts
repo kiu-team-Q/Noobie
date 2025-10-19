@@ -71,10 +71,13 @@ serve(async (req) => {
       throw inviteError;
     }
 
+    // Use the published app URL for invite links
+    const appUrl = 'https://noobie.lovable.app';
+    
     return new Response(
       JSON.stringify({ 
         invitation,
-        invite_url: `${req.headers.get('origin')}/auth?invite=${token_str}`
+        invite_url: `${appUrl}/auth?invite=${token_str}`
       }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
