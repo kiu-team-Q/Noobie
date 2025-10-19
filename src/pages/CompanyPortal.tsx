@@ -353,8 +353,9 @@ const CompanyPortal = () => {
               </h2>
               <p className="text-muted-foreground">{profile?.email}</p>
             </div>
-            <Button variant="outline" onClick={openEditProfileDialog}>
+            <Button variant="outline" onClick={openEditProfileDialog} className="gap-2">
               <Pencil className="h-4 w-4" />
+              Edit Profile
             </Button>
           </div>
         </Card>
