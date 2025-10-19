@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ArrowLeft, LogOut, User, Plus, Copy, Briefcase, Pencil } from "lucide-react";
+import { ArrowLeft, LogOut, User, Plus, Copy, Briefcase, Pencil, FileText } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -349,17 +351,39 @@ const CompanyPortal = () => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Rules</TableHead>
+                  <TableHead>Position</TableHead>
+                  <TableHead className="w-1/2">Guidelines</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {positions.map((position) => (
                   <TableRow key={position.id}>
-                    <TableCell className="font-medium">{position.name}</TableCell>
-                    <TableCell className="text-muted-foreground">
-                      {position.rules || "No rules set"}
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <Badge variant="outline" className="gap-1.5">
+                          <Briefcase className="h-3 w-3" />
+                          {position.name}
+                        </Badge>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      {position.rules ? (
+                        <ScrollArea className="h-24 w-full rounded-md border border-border bg-card/50 p-3">
+                          <div className="space-y-2">
+                            {position.rules.split('\n').map((rule: string, index: number) => 
+                              rule.trim() && (
+                                <div key={index} className="flex items-start gap-2 text-sm">
+                                  <FileText className="h-3.5 w-3.5 text-primary mt-0.5 flex-shrink-0" />
+                                  <span className="text-muted-foreground leading-relaxed">{rule.trim()}</span>
+                                </div>
+                              )
+                            )}
+                          </div>
+                        </ScrollArea>
+                      ) : (
+                        <span className="text-muted-foreground text-sm italic">No guidelines set</span>
+                      )}
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex gap-2 justify-end">
@@ -372,7 +396,6 @@ const CompanyPortal = () => {
                         </Button>
                         <Button
                           size="sm"
-                          variant="outline"
                           onClick={() => handleGenerateInvite(position.id)}
                         >
                           Generate Invite
