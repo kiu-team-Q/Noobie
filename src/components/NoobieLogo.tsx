@@ -67,7 +67,7 @@ export const NoobieLogo = ({ className = "", textSize = "text-5xl" }: NooglesLog
         }}
       >
         {/* Eye white */}
-        <div className="absolute inset-0 rounded-full bg-white border-4 border-primary" />
+        <div className="absolute inset-0 rounded-full bg-background border-4 border-primary" />
         
         {/* Iris */}
         <div className="absolute inset-0 flex items-center justify-center">
@@ -96,7 +96,7 @@ export const NoobieLogo = ({ className = "", textSize = "text-5xl" }: NooglesLog
         }}
       >
         {/* Eye white */}
-        <div className="absolute inset-0 rounded-full bg-white border-4 border-primary" />
+        <div className="absolute inset-0 rounded-full bg-background border-4 border-primary" />
         
         {/* Iris */}
         <div className="absolute inset-0 flex items-center justify-center">
